@@ -3,9 +3,18 @@ package inference
 import (
 	"fmt"
 	"log"
+	"math"
+	"slices"
 
 	"github.com/daulet/tokenizers"
 	ort "github.com/yalue/onnxruntime_go"
+)
+
+// tokenizer.json
+const (
+	clsID  = 50281
+	sepID  = 50282
+	maskID = 50284
 )
 
 type InferenceSession struct {
@@ -43,4 +52,67 @@ func (l *InferenceSession) CloseInferenceSession() {
 	l.session.Destroy()
 	l.tokenizer.Close()
 	ort.DestroyEnvironment()
+}
+
+func (session *InferenceSession) Choose(instructions, state string, options []string, temperature float64) ([]float64, error) {
+	seq := append([]int64{clsID}, session.encode("choice question: "+instructions)...)
+	seq = append(seq, sepID)
+	var markers []int64
+	for _, o := range options {
+		markers = append(markers, int64(len(seq)))
+		seq = append(append(seq, maskID), session.encode(" "+o)...)
+	}
+	seq = append(append(append(seq, sepID), session.encode(state)...), sepID)
+
+	n, k := int64(len(seq)), int64(len(options))
+	inputs := []ort.Value{
+		newTensor(seq, 1, n),
+		newTensor(slices.Repeat([]int64{1}, int(n)), 1, n),
+		newTensor(markers, 1, k),
+		newTensor(slices.Repeat([]bool{true}, int(k)), 1, k),
+		newTensor([]int64{0}, 1), // qtype 0 = choice
+	}
+	outputs := []ort.Value{nil, nil}
+	defer func() {
+		for _, v := range slices.Concat(inputs, outputs) {
+			if v != nil {
+				v.Destroy()
+			}
+		}
+	}()
+	if err := session.session.Run(inputs, outputs); err != nil {
+		return nil, fmt.Errorf("running model: %w", err)
+	}
+	return softmax(outputs[0].(*ort.Tensor[float32]).GetData(), temperature), nil
+}
+
+func (session *InferenceSession) encode(s string) []int64 {
+	ids, _ := session.tokenizer.Encode(s, false)
+	out := make([]int64, len(ids))
+	for i, id := range ids {
+		out[i] = int64(id)
+	}
+	return out
+}
+
+func newTensor[T ort.TensorData](data []T, dims ...int64) ort.Value {
+	t, err := ort.NewTensor(ort.NewShape(dims...), data)
+	if err != nil {
+		panic(err)
+	}
+	return t
+}
+
+func softmax(scores []float32, temperature float64) []float64 {
+	out := make([]float64, len(scores))
+	maxScore := float64(slices.Max(scores)) / temperature
+	var sum float64
+	for i, score := range scores {
+		out[i] = math.Exp(float64(score)/temperature - maxScore)
+		sum += out[i]
+	}
+	for i := range out {
+		out[i] /= sum
+	}
+	return out
 }
