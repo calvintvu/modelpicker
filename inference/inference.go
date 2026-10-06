@@ -44,7 +44,7 @@ func LoadInferenceSession() (*InferenceSession, error) {
 		ort.DestroyEnvironment()
 		return nil, fmt.Errorf("loading model: %w", err)
 	}
-	log.Println("inference session set...")
+	log.Println("inference session loaded successfully!...")
 	return &InferenceSession{tokenizer: tokenizer, session: session}, nil
 }
 
