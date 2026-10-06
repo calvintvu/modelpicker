@@ -1,5 +1,7 @@
 package inference
 
+import "log"
+
 type ModelRouteRequest struct {
 	Prompt string `json:"prompt"`
 }
@@ -28,5 +30,6 @@ func Route(prompt string, session *InferenceSession) (ModelRouteResponse, error)
 			best = i
 		}
 	}
+	log.Println(tiers[best])
 	return ModelRouteResponse{Tier: tiers[best]}, nil
 }
