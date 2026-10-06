@@ -25,7 +25,7 @@ func main() {
 
 	http.HandleFunc("POST /v1/route", func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
-		var req ModelRouteRequest
+		var req inference.ModelRouteRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "invalid JSON body", http.StatusBadRequest)
 			return
@@ -34,7 +34,7 @@ func main() {
 			http.Error(w, "prompt is required", http.StatusBadRequest)
 			return
 		}
-		routeResponse, err := Route(req.Prompt, session)
+		routeResponse, err := inference.Route(req.Prompt, session)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

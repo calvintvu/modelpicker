@@ -1,8 +1,4 @@
-package main
-
-import (
-	"github.com/calvinvu/ez-model-router/inference"
-)
+package inference
 
 type ModelRouteRequest struct {
 	Prompt string `json:"prompt"`
@@ -12,7 +8,7 @@ type ModelRouteResponse struct {
 	Tier string `json:"tier"`
 }
 
-func Route(prompt string, session *inference.InferenceSession) (ModelRouteResponse, error) {
+func Route(prompt string, session *InferenceSession) (ModelRouteResponse, error) {
 	questionText := "How difficult is this request to answer well?"
 	options := []string{
 		"complex: multi-step reasoning, code, math, analysis, long-form writing",
