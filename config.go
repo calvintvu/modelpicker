@@ -10,6 +10,7 @@ import (
 )
 
 const DefaultQuestion = "What kind of request is this?"
+const MaxTiers = 10
 
 type Tier struct {
 	Name        string   `yaml:"name"`
@@ -46,6 +47,9 @@ func LoadConfig(path string) (*Config, error) {
 func (config *Config) validate() error {
 	if len(config.Tiers) == 0 {
 		return errors.New("at least one tier is required")
+	}
+	if len(config.Tiers) > MaxTiers {
+		return fmt.Errorf("tier count %d over max limit of %d", len(config.Tiers), MaxTiers)
 	}
 	seen := map[string]bool{}
 	for i, tier := range config.Tiers {
