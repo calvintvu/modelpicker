@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/calvinvu/ez-model-router/inference"
+	"go.yaml.in/yaml/v3"
 )
 
 const maxBodyBytes = 1 << 20
@@ -18,6 +19,14 @@ func main() {
 		os.Exit(1)
 	}
 	defer session.CloseInferenceSession()
+
+	cfg, err := LoadConfig("./config.yaml")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "invalid config:", err)
+		os.Exit(1)
+	}
+	out, _ := yaml.Marshal(cfg)
+	fmt.Println(string(out))
 
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
