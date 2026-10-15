@@ -31,6 +31,10 @@ func defaultTemperature(choiceCount int) float64 {
 }
 
 func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelRouteResponse, error) {
+	if len(cfg.Tiers) == 1 {
+		model, err := random.RandomElement(cfg.Tiers[0].Models)
+		return ModelRouteResponse{Tier: cfg.Tiers[0].Name, Model: model}, err
+	}
 	options := make([]string, len(cfg.Tiers))
 	for i, tier := range cfg.Tiers {
 		options[i] = tier.Name + ": " + tier.Description
