@@ -74,5 +74,10 @@ func (config *Config) validate() error {
 	if _, ok := seen[config.DefaultTier]; !ok {
 		return fmt.Errorf("default tier is not defined")
 	}
+	// negative temperature reverses the routing
+	if config.Classifier.Temperature < 0 {
+		return fmt.Errorf("classifier.temperature must be > 0, got %v", config.Classifier.Temperature)
+	}
+
 	return nil
 }
