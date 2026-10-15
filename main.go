@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/calvinvu/ez-model-router/config"
 	"github.com/calvinvu/ez-model-router/inference"
 	"go.yaml.in/yaml/v3"
 )
@@ -20,7 +21,7 @@ func main() {
 	}
 	defer session.CloseInferenceSession()
 
-	cfg, err := LoadConfig("./config.yaml")
+	cfg, err := config.LoadConfig("./config.yaml")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "invalid config:", err)
 		os.Exit(1)
@@ -43,7 +44,7 @@ func main() {
 			http.Error(w, "prompt is required", http.StatusBadRequest)
 			return
 		}
-		routeResponse, err := inference.Route(req.Prompt, session)
+		routeResponse, err := inference.Route(cfg, req.Prompt, session)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
