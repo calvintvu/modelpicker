@@ -2,6 +2,7 @@ package inference
 
 import (
 	"log"
+	"net/http"
 	"slices"
 
 	"github.com/calvinvu/ez-model-router/config"
@@ -31,7 +32,7 @@ func defaultTemperature(choiceCount int) float64 {
 	}
 }
 
-func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelRouteResponse, error) {
+func Route(r *http.Request, cfg *config.Config, prompt string, session *InferenceSession) (ModelRouteResponse, error) {
 	if len(cfg.Tiers) == 1 {
 		return pick(cfg.Tiers[0])
 	}
@@ -56,7 +57,7 @@ func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelR
 			best = i
 		}
 	}
-	log.Println(cfg.Tiers[best].Name)
+	log.Println(r.URL.Path, cfg.Tiers[best].Name)
 	return pick(cfg.Tiers[best])
 }
 

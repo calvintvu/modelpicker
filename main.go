@@ -9,12 +9,23 @@ import (
 	"github.com/calvinvu/ez-model-router/config"
 	"github.com/calvinvu/ez-model-router/inference"
 	"github.com/calvinvu/ez-model-router/middleware"
+	"github.com/joho/godotenv"
 	"go.yaml.in/yaml/v3"
 )
 
 const maxBodyBytes = 1 << 20
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Fprintln(os.Stderr, "failed to load .env:", err)
+		os.Exit(1)
+	}
+	authToken := os.Getenv("AUTH_TOKEN")
+	if authToken == "" {
+		fmt.Fprintln(os.Stderr, "AUTH_TOKEN is not set")
+		os.Exit(1)
+	}
+
 	session, err := inference.LoadInferenceSession()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "failed to load inference session:", err)
@@ -38,7 +49,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	http.Handle("POST /v1/route", middleware.Authenticate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.Handle("POST /v1/route", middleware.Authenticate(authToken)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 		var req inference.ModelRouteRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -49,7 +60,7 @@ func main() {
 			http.Error(w, "prompt is required", http.StatusBadRequest)
 			return
 		}
-		routeResponse, err := inference.Route(cfg, req.Prompt, session)
+		routeResponse, err := inference.Route(r, cfg, req.Prompt, session)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
