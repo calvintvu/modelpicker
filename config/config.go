@@ -44,6 +44,24 @@ func LoadConfig(path string) (*Config, error) {
 	return &config, config.validate()
 }
 
+func (config *Config) Options() []string {
+	options := make([]string, len(config.Tiers))
+	for i, tier := range config.Tiers {
+		options[i] = tier.Name + ": " + tier.Description
+	}
+	return options
+}
+
+func (config *Config) ValidateFit(check func(question string, options []string) error) error {
+	if len(config.Tiers) == 1 {
+		return nil
+	}
+	if err := check(config.Classifier.Question, config.Options()); err != nil {
+		return fmt.Errorf("tiers too large for classifier: %w", err)
+	}
+	return nil
+}
+
 func (config *Config) validate() error {
 	if len(config.Tiers) == 0 {
 		return errors.New("at least one tier is required")

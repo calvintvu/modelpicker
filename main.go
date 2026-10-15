@@ -26,6 +26,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, "invalid config:", err)
 		os.Exit(1)
 	}
+	if err := cfg.ValidateFit(session.CheckFits); err != nil {
+		fmt.Fprintln(os.Stderr, "invalid config:", err)
+		os.Exit(1)
+	}
 	out, _ := yaml.Marshal(cfg)
 	fmt.Println(string(out))
 
