@@ -2,6 +2,7 @@ package inference
 
 import (
 	"log"
+	"slices"
 
 	"github.com/calvinvu/ez-model-router/config"
 	random "github.com/calvinvu/ez-model-router/utils"
@@ -32,13 +33,9 @@ func defaultTemperature(choiceCount int) float64 {
 
 func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelRouteResponse, error) {
 	if len(cfg.Tiers) == 1 {
-		model, err := random.RandomElement(cfg.Tiers[0].Models)
-		return ModelRouteResponse{Tier: cfg.Tiers[0].Name, Model: model}, err
+		return pick(cfg.Tiers[0])
 	}
-	options := make([]string, len(cfg.Tiers))
-	for i, tier := range cfg.Tiers {
-		options[i] = tier.Name + ": " + tier.Description
-	}
+	options := cfg.Options()
 	temperature := cfg.Classifier.Temperature
 	if temperature == 0 {
 		temperature = defaultTemperature(len(options))
@@ -46,7 +43,12 @@ func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelR
 
 	probs, err := session.Choose(cfg.Classifier.Question, prompt, options, temperature)
 	if err != nil {
-		return ModelRouteResponse{}, err
+		i := slices.IndexFunc(cfg.Tiers, func(t config.Tier) bool { return t.Name == cfg.DefaultTier })
+		if i < 0 {
+			return ModelRouteResponse{}, err
+		}
+		log.Printf("inference failed, using default tier %q: %v", cfg.DefaultTier, err)
+		return pick(cfg.Tiers[i])
 	}
 	best := 0
 	for i := range probs {
@@ -54,13 +56,14 @@ func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelR
 			best = i
 		}
 	}
-	tier := cfg.Tiers[best].Name
-	log.Println(tier)
+	log.Println(cfg.Tiers[best].Name)
+	return pick(cfg.Tiers[best])
+}
 
-	model, err := random.RandomElement(cfg.Tiers[best].Models)
+func pick(tier config.Tier) (ModelRouteResponse, error) {
+	model, err := random.RandomElement(tier.Models)
 	if err != nil {
 		return ModelRouteResponse{}, err
 	}
-
-	return ModelRouteResponse{Tier: tier, Model: model}, nil
+	return ModelRouteResponse{Tier: tier.Name, Model: model}, nil
 }
