@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/calvinvu/ez-model-router/config"
+	random "github.com/calvinvu/ez-model-router/utils"
 )
 
 type ModelRouteRequest struct {
@@ -11,7 +12,8 @@ type ModelRouteRequest struct {
 }
 
 type ModelRouteResponse struct {
-	Tier string `json:"tier"`
+	Tier  string `json:"tier"`
+	Model string `json:"model"`
 }
 
 // calibrated from laya_config.json
@@ -50,5 +52,11 @@ func Route(cfg *config.Config, prompt string, session *InferenceSession) (ModelR
 	}
 	tier := cfg.Tiers[best].Name
 	log.Println(tier)
-	return ModelRouteResponse{Tier: tier}, nil
+
+	model, err := random.RandomElement(cfg.Tiers[best].Models)
+	if err != nil {
+		return ModelRouteResponse{}, err
+	}
+
+	return ModelRouteResponse{Tier: tier, Model: model}, nil
 }
