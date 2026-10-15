@@ -17,6 +17,9 @@ const (
 	maskID = 50284
 )
 
+// laya_config.json max_len
+const maxLen = 512
+
 type InferenceSession struct {
 	tokenizer *tokenizers.Tokenizer
 	session   *ort.DynamicAdvancedSession
@@ -54,15 +57,35 @@ func (l *InferenceSession) CloseInferenceSession() {
 	ort.DestroyEnvironment()
 }
 
-func (session *InferenceSession) Choose(instructions, state string, options []string, temperature float64) ([]float64, error) {
-	seq := append([]int64{clsID}, session.encode("choice question: "+instructions)...)
+func (session *InferenceSession) head(instructions string, options []string) (seq, markers []int64) {
+	seq = append([]int64{clsID}, session.encode("choice question: "+instructions)...)
 	seq = append(seq, sepID)
-	var markers []int64
 	for _, o := range options {
 		markers = append(markers, int64(len(seq)))
 		seq = append(append(seq, maskID), session.encode(" "+o)...)
 	}
-	seq = append(append(append(seq, sepID), session.encode(state)...), sepID)
+	return seq, markers
+}
+
+func (session *InferenceSession) CheckFits(instructions string, options []string) error {
+	seq, _ := session.head(instructions, options)
+	if len(seq)+2 >= maxLen {
+		return fmt.Errorf("question + options use %d tokens, over max_len %d", len(seq), maxLen)
+	}
+	return nil
+}
+
+func (session *InferenceSession) Choose(instructions, state string, options []string, temperature float64) ([]float64, error) {
+	seq, markers := session.head(instructions, options)
+	room := maxLen - len(seq) - 2
+	if room <= 0 {
+		return nil, fmt.Errorf("question + options use %d tokens, over max_len %d", len(seq), maxLen)
+	}
+	stateIDs := session.encode(state)
+	if len(stateIDs) > room {
+		stateIDs = stateIDs[:room]
+	}
+	seq = append(append(append(seq, sepID), stateIDs...), sepID)
 
 	n, k := int64(len(seq)), int64(len(options))
 	inputs := []ort.Value{
