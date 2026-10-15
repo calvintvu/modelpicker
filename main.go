@@ -8,6 +8,7 @@ import (
 
 	"github.com/calvinvu/ez-model-router/config"
 	"github.com/calvinvu/ez-model-router/inference"
+	"github.com/calvinvu/ez-model-router/middleware"
 	"go.yaml.in/yaml/v3"
 )
 
@@ -37,7 +38,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	http.HandleFunc("POST /v1/route", func(w http.ResponseWriter, r *http.Request) {
+	http.Handle("POST /v1/route", middleware.Authenticate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 		var req inference.ModelRouteRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -55,7 +56,7 @@ func main() {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(routeResponse)
-	})
+	})))
 
 	fmt.Println("listening on :8080")
 	http.ListenAndServe(":8080", nil)
