@@ -38,8 +38,8 @@ func LoadConfig(path string) (*Config, error) {
 	if err := decoder.Decode(&config); err != nil {
 		return nil, fmt.Errorf("parsing config %s: %w", path, err)
 	}
-	if config.Classifier.Temperature == 0 {
-		config.Classifier.Temperature = 0
+	if config.Classifier.Question == "" {
+		config.Classifier.Question = DefaultQuestion
 	}
 	return &config, config.validate()
 }
@@ -67,12 +67,6 @@ func (config *Config) validate() error {
 	}
 	if config.DefaultTier != "" && !seen[config.DefaultTier] {
 		return fmt.Errorf("default_tier %q is not a defined tier", config.DefaultTier)
-	}
-	if config.Classifier.Question == "" {
-		return fmt.Errorf("default_question is not defined")
-	}
-	if _, ok := seen[config.DefaultTier]; !ok {
-		return fmt.Errorf("default tier is not defined")
 	}
 	// negative temperature reverses the routing
 	if config.Classifier.Temperature < 0 {
