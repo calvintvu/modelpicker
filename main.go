@@ -20,9 +20,9 @@ func main() {
 		fmt.Fprintln(os.Stderr, "failed to load .env:", err)
 		os.Exit(1)
 	}
-	authToken := os.Getenv("AUTH_TOKEN")
-	if authToken == "" {
-		fmt.Fprintln(os.Stderr, "AUTH_TOKEN is not set")
+	apiKey := os.Getenv("API_KEY")
+	if apiKey == "" {
+		fmt.Fprintln(os.Stderr, "API_KEY is not set")
 		os.Exit(1)
 	}
 
@@ -49,7 +49,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	http.Handle("POST /v1/route", middleware.Authenticate(authToken)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 		var req inference.ModelRouteRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
