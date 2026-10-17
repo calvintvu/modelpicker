@@ -67,7 +67,7 @@ func runServer() error {
 		MaxHeaderBytes:    maxHeaderBytes,
 	}
 
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
