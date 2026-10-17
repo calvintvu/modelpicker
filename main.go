@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/calvinvu/ez-model-router/config"
 	"github.com/calvinvu/ez-model-router/inference"
@@ -45,11 +49,20 @@ func main() {
 	out, _ := yaml.Marshal(cfg)
 	fmt.Println(string(out))
 
-	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	server := &http.Server{
+		Addr:         ":8080",
+		Handler:      mux,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	http.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 		var req inference.ModelRouteRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -69,6 +82,29 @@ func main() {
 		json.NewEncoder(w).Encode(routeResponse)
 	})))
 
-	fmt.Println("listening on :8080")
-	http.ListenAndServe(":8080", nil)
+	go func() {
+		fmt.Println("Server starting on :8080")
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Printf("error starting server: %s\n", err)
+			os.Exit(1)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit // block until server shutdown
+	fmt.Println("Server is shutting down...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		fmt.Printf("Graceful shutdown failed: %s\n", err)
+		if closeErr := server.Close(); closeErr != nil {
+			fmt.Printf("Error closing server: %s\n", closeErr)
+		}
+	}
+
+	fmt.Println("Server stopped")
 }
