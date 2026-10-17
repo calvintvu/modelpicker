@@ -84,7 +84,8 @@ func runServer() error {
 		}
 		routeResponse, err := inference.Route(r, cfg, req.Prompt, session)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Printf("route failed: %v", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
