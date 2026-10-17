@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -20,31 +21,33 @@ import (
 const maxBodyBytes = 1 << 20
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		fmt.Fprintln(os.Stderr, "failed to load .env:", err)
+	if err := runServer(); err != nil {
+		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
+	}
+}
+
+func runServer() error {
+	if err := godotenv.Load(); err != nil {
+		return fmt.Errorf("failed to load .env: %w", err)
 	}
 	apiKey := os.Getenv("API_KEY")
 	if apiKey == "" {
-		fmt.Fprintln(os.Stderr, "API_KEY is not set")
-		os.Exit(1)
+		return errors.New("API_KEY is not set")
 	}
 
 	session, err := inference.LoadInferenceSession()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "failed to load inference session:", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to load inference session: %w", err)
 	}
 	defer session.CloseInferenceSession()
 
 	cfg, err := config.LoadConfig("./config.yaml")
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "invalid config:", err)
-		os.Exit(1)
+		return fmt.Errorf("invalid config: %w", err)
 	}
 	if err := cfg.ValidateFit(session.CheckFits); err != nil {
-		fmt.Fprintln(os.Stderr, "invalid config:", err)
-		os.Exit(1)
+		return fmt.Errorf("invalid config: %w", err)
 	}
 	out, _ := yaml.Marshal(cfg)
 	fmt.Println(string(out))
@@ -82,18 +85,25 @@ func main() {
 		json.NewEncoder(w).Encode(routeResponse)
 	})))
 
+	serverErrors := make(chan error, 1)
+
 	go func() {
 		fmt.Println("Server starting on :8080")
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Printf("error starting server: %s\n", err)
-			os.Exit(1)
-		}
+		serverErrors <- server.ListenAndServe()
 	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	defer signal.Stop(quit)
 
-	<-quit // block until server shutdown
+	var exitErr error
+	select {
+	case err := <-serverErrors:
+		exitErr = fmt.Errorf("server error: %w", err)
+	case sig := <-quit:
+		fmt.Println("Received signal:", sig)
+	}
+
 	fmt.Println("Server is shutting down...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -107,4 +117,5 @@ func main() {
 	}
 
 	fmt.Println("Server stopped")
+	return exitErr
 }
