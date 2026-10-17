@@ -1,0 +1,43 @@
+classifier:
+  question: "What kind of request is this?"
+  # optional; defaults to the laya_config.json value for len(tiers)
+  # temperature: 1.76
+
+default_tier: general
+
+tiers:
+  - name: reasoning-xl
+    description: "deep reasoning: proofs, planning, hard math, research"
+    models:
+      - openai/gpt-6-astra
+      - anthropic/claude-opus-5.5
+      - google/gemini-4-argon
+      - moonshot/kimi-k3
+
+  - name: code
+    description: "programming: write, debug, or review code"
+    models:
+      - anthropic/claude-sonnet-5.5
+      - openai/gpt-6.1-sol
+      - deepseek/deepseek-v4-pro
+
+  - name: writing
+    description: "creative or long-form writing: stories, essays, docs"
+    models:
+      - anthropic/claude-fable-5.1
+      - anthropic/claude-sonnet-5.5
+      - google/gemini-4-argon
+
+  - name: general
+    description: "everyday questions: explanations, advice, summaries"
+    models:
+      - google/gemini-3.8-flash
+      - openai/gpt-6-luna
+      - x-ai/grok-4.7
+
+  - name: nano
+    description: "chit-chat: greetings, thanks, one-word answers"
+    models:
+      - anthropic/claude-haiku-5.5
+      - deepseek/deepseek-v4.1-flash
+      - qwen/qwen3.8-flash
