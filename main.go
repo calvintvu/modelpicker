@@ -19,7 +19,10 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-const maxBodyBytes = 1 << 20
+const (
+	maxBodyBytes   = 1 << 20
+	maxHeaderBytes = 32 << 10
+)
 
 func main() {
 	if err := runServer(); err != nil {
@@ -61,6 +64,7 @@ func runServer() error {
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       120 * time.Second,
+		MaxHeaderBytes:    maxHeaderBytes,
 	}
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
