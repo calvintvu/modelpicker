@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -22,7 +23,7 @@ const maxBodyBytes = 1 << 20
 
 func main() {
 	if err := runServer(); err != nil {
-		fmt.Fprintln(os.Stderr, "error:", err)
+		log.Printf("fatal: %v", err)
 		os.Exit(1)
 	}
 }
@@ -50,7 +51,7 @@ func runServer() error {
 		return fmt.Errorf("invalid config: %w", err)
 	}
 	out, _ := yaml.Marshal(cfg)
-	fmt.Println(string(out))
+	log.Printf("loaded config:\n%s", out)
 
 	mux := http.NewServeMux()
 	server := &http.Server{
@@ -88,7 +89,7 @@ func runServer() error {
 	serverErrors := make(chan error, 1)
 
 	go func() {
-		fmt.Println("Server starting on :8080")
+		log.Println("server starting on :8080")
 		serverErrors <- server.ListenAndServe()
 	}()
 
@@ -101,21 +102,21 @@ func runServer() error {
 	case err := <-serverErrors:
 		exitErr = fmt.Errorf("server error: %w", err)
 	case sig := <-quit:
-		fmt.Println("Received signal:", sig)
+		log.Printf("received signal: %v", sig)
 	}
 
-	fmt.Println("Server is shutting down...")
+	log.Println("server is shutting down...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		fmt.Printf("Graceful shutdown failed: %s\n", err)
+		log.Printf("graceful shutdown failed: %v", err)
 		if closeErr := server.Close(); closeErr != nil {
-			fmt.Printf("Error closing server: %s\n", closeErr)
+			log.Printf("error closing server: %v", closeErr)
 		}
 	}
 
-	fmt.Println("Server stopped")
+	log.Println("server stopped")
 	return exitErr
 }
