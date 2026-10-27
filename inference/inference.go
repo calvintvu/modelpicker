@@ -58,7 +58,7 @@ func LoadInferenceSession() (*InferenceSession, error) {
 	tokenizer, err := tokenizers.FromFile(tokenizerPath)
 	if err != nil {
 		ort.DestroyEnvironment()
-		return nil, fmt.Errorf("loading tokenizer %q: %w", tokenizerPath, err)
+		return nil, fmt.Errorf("loading tokenizer %q (run make model or set MODEL_DIR): %w", tokenizerPath, err)
 	}
 	log.Println("tokenizer set...")
 	modelPath := filepath.Join(modelDir, "laya.onnx")
@@ -68,7 +68,7 @@ func LoadInferenceSession() (*InferenceSession, error) {
 	if err != nil {
 		tokenizer.Close()
 		ort.DestroyEnvironment()
-		return nil, fmt.Errorf("loading model %q: %w", modelPath, err)
+		return nil, fmt.Errorf("loading model %q (run make model or set MODEL_DIR): %w", modelPath, err)
 	}
 	log.Println("inference session loaded successfully!...")
 	return &InferenceSession{tokenizer: tokenizer, session: session}, nil
