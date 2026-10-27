@@ -32,12 +32,28 @@ func main() {
 }
 
 func runServer() error {
-	if err := godotenv.Load(); err != nil {
-		return fmt.Errorf("failed to load .env: %w", err)
+	if _, err := os.Lstat(".env"); !errors.Is(err, os.ErrNotExist) {
+		if err := godotenv.Load(); err != nil {
+			var pathErr *os.PathError
+			if errors.As(err, &pathErr) {
+				return fmt.Errorf("failed to load .env: %w", err)
+			}
+			// godotenv parse errors can contain secrets
+			return errors.New("failed to load .env: invalid syntax")
+		}
 	}
 	apiKey := os.Getenv("API_KEY")
 	if apiKey == "" {
 		return errors.New("API_KEY is not set")
+	}
+
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath == "" {
+		configPath = "./config.yaml"
+	}
+	cfg, err := config.LoadConfig(configPath)
+	if err != nil {
+		return fmt.Errorf("invalid config %q: %w", configPath, err)
 	}
 
 	session, err := inference.LoadInferenceSession()
@@ -45,20 +61,19 @@ func runServer() error {
 		return fmt.Errorf("failed to load inference session: %w", err)
 	}
 	defer session.CloseInferenceSession()
-
-	cfg, err := config.LoadConfig("./config.yaml")
-	if err != nil {
-		return fmt.Errorf("invalid config: %w", err)
-	}
 	if err := cfg.ValidateFit(session.CheckFits); err != nil {
 		return fmt.Errorf("invalid config: %w", err)
 	}
 	out, _ := yaml.Marshal(cfg)
 	log.Printf("loaded config:\n%s", out)
 
+	listenAddr := os.Getenv("LISTEN_ADDR")
+	if listenAddr == "" {
+		listenAddr = ":8080"
+	}
 	mux := http.NewServeMux()
 	server := &http.Server{
-		Addr:              ":8080",
+		Addr:              listenAddr,
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
@@ -95,7 +110,7 @@ func runServer() error {
 	serverErrors := make(chan error, 1)
 
 	go func() {
-		log.Println("server starting on :8080")
+		log.Printf("server starting on %s", server.Addr)
 		serverErrors <- server.ListenAndServe()
 	}()
 
