@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"os"
+	"strings"
 
 	"go.yaml.in/yaml/v3"
 )
@@ -72,14 +74,19 @@ func (config *Config) validate() error {
 	seen := map[string]bool{}
 	for i, tier := range config.Tiers {
 		switch {
-		case tier.Name == "":
+		case strings.TrimSpace(tier.Name) == "":
 			return fmt.Errorf("tiers[%d]: name is required", i)
 		case seen[tier.Name]:
 			return fmt.Errorf("tiers[%d]: duplicate name %q", i, tier.Name)
-		case tier.Description == "" && len(config.Tiers) > 1:
+		case strings.TrimSpace(tier.Description) == "" && len(config.Tiers) > 1:
 			return fmt.Errorf("tier %q: description is required", tier.Name)
 		case len(tier.Models) == 0:
 			return fmt.Errorf("tier %q: at least one model is required", tier.Name)
+		}
+		for _, model := range tier.Models {
+			if strings.TrimSpace(model) == "" {
+				return fmt.Errorf("tier %q: model identifiers must not be empty", tier.Name)
+			}
 		}
 		seen[tier.Name] = true
 	}
@@ -87,8 +94,8 @@ func (config *Config) validate() error {
 		return fmt.Errorf("default_tier %q is not a defined tier", config.DefaultTier)
 	}
 	// negative temperature reverses the routing
-	if config.Classifier.Temperature < 0 {
-		return fmt.Errorf("classifier.temperature must be > 0, got %v", config.Classifier.Temperature)
+	if config.Classifier.Temperature < 0 || math.IsNaN(config.Classifier.Temperature) || math.IsInf(config.Classifier.Temperature, 0) {
+		return fmt.Errorf("classifier.temperature must be finite and >= 0, got %v", config.Classifier.Temperature)
 	}
 
 	return nil
