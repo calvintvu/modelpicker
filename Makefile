@@ -60,6 +60,7 @@ clean:
 	rm -f ez-model-router-bin
 
 model:
+	@command -v hf >/dev/null 2>&1 || { echo "Hugging Face CLI (hf) not found. Install with: uv tool install huggingface_hub" >&2; exit 1; }
 	hf download receptron/laya-onnx \
 		--revision 68f27dfe5a27a54fb2b1fefc432f43f972e90868 \
 		--local-dir "$(MODEL_DIR)"
