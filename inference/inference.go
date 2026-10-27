@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
+	"path/filepath"
+	"runtime"
 	"slices"
 
 	"github.com/daulet/tokenizers"
@@ -25,27 +28,47 @@ type InferenceSession struct {
 	session   *ort.DynamicAdvancedSession
 }
 
+func runtimeLibraryPath(goos, goarch string) string {
+	if path := os.Getenv("ONNX_RUNTIME_PATH"); path != "" {
+		return path
+	}
+	name := "libonnxruntime.so"
+	switch goos {
+	case "darwin":
+		name = "libonnxruntime.dylib"
+	case "windows":
+		name = "onnxruntime.dll"
+	}
+	return filepath.Join("lib", goos+"-"+goarch, "lib", name)
+}
+
 func LoadInferenceSession() (*InferenceSession, error) {
-	ort.SetSharedLibraryPath("/usr/lib/libonnxruntime.so")
-	log.Println("onnx runtime path set...")
+	runtimePath := runtimeLibraryPath(runtime.GOOS, runtime.GOARCH)
+	ort.SetSharedLibraryPath(runtimePath)
 	err := ort.InitializeEnvironment()
 	if err != nil {
-		return nil, fmt.Errorf("Error initializing onnxruntime library: %w", err)
+		return nil, fmt.Errorf("initializing ONNX Runtime at %q (run make deps or set ONNX_RUNTIME_PATH): %w", runtimePath, err)
 	}
 	log.Println("onnx runtime environment set...")
-	tokenizer, err := tokenizers.FromFile("./inference/model/tokenizer/tokenizer.json")
+	modelDir := os.Getenv("MODEL_DIR")
+	if modelDir == "" {
+		modelDir = filepath.Join("inference", "model")
+	}
+	tokenizerPath := filepath.Join(modelDir, "tokenizer", "tokenizer.json")
+	tokenizer, err := tokenizers.FromFile(tokenizerPath)
 	if err != nil {
 		ort.DestroyEnvironment()
-		return nil, fmt.Errorf("loading tokenizer: %w", err)
+		return nil, fmt.Errorf("loading tokenizer %q: %w", tokenizerPath, err)
 	}
 	log.Println("tokenizer set...")
-	session, err := ort.NewDynamicAdvancedSession("inference/model/laya.onnx",
+	modelPath := filepath.Join(modelDir, "laya.onnx")
+	session, err := ort.NewDynamicAdvancedSession(modelPath,
 		[]string{"input_ids", "attention_mask", "marker_pos", "marker_mask", "qtype"},
 		[]string{"logits", "act_probs"}, nil)
 	if err != nil {
 		tokenizer.Close()
 		ort.DestroyEnvironment()
-		return nil, fmt.Errorf("loading model: %w", err)
+		return nil, fmt.Errorf("loading model %q: %w", modelPath, err)
 	}
 	log.Println("inference session loaded successfully!...")
 	return &InferenceSession{tokenizer: tokenizer, session: session}, nil
