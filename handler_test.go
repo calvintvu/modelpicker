@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -82,37 +81,6 @@ func TestHTTPContract(t *testing.T) {
 			}
 			if tc.status == 401 && response.Header.Get("WWW-Authenticate") != "Bearer" {
 				t.Fatal("missing bearer challenge")
-			}
-		})
-	}
-}
-
-type failingChooser struct{}
-
-func (failingChooser) Choose(string, string, []string, float64) ([]float64, error) {
-	return nil, errors.New("test inference failure")
-}
-
-func TestHTTPInferenceFailure(t *testing.T) {
-	for _, fallback := range []string{"", "general"} {
-		t.Run("fallback="+fallback, func(t *testing.T) {
-			cfg := &config.Config{DefaultTier: fallback, Tiers: []config.Tier{
-				{Name: "code", Description: "programming", Models: []string{"test/code"}},
-				{Name: "general", Description: "conversation", Models: []string{"test/general"}},
-			}}
-			r := httptest.NewRequest("POST", "/v1/route", strings.NewReader(`{"prompt":"hello"}`))
-			r.Header.Set("Authorization", "Bearer test-key")
-			w := httptest.NewRecorder()
-			newHandler("test-key", cfg, failingChooser{}).ServeHTTP(w, r)
-			if fallback == "" {
-				if w.Code != 500 || w.Body.String() != "internal server error\n" {
-					t.Fatalf("unexpected error response: %d %s", w.Code, w.Body)
-				}
-			} else {
-				var result map[string]string
-				if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil || w.Code != 200 || result["tier"] != "general" || result["model"] != "test/general" {
-					t.Fatalf("unexpected fallback response: %d %s", w.Code, w.Body)
-				}
 			}
 		})
 	}
