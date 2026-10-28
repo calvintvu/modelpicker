@@ -156,12 +156,16 @@ Press Ctrl+C to stop it.
 
 | Target | Status |
 | --- | --- |
-| macOS ARM64 native | Verified on macOS 27.0.1. |
-| Linux AMD64 native/container | Planned; builds pass under emulation, native real-model HTTP remains pending. |
-| Linux ARM64 native | Planned; native build/tests pass, native deployment walkthrough remains pending. |
+| macOS ARM64 native | Verified on macOS 15.7.9 and 27.0.1; CI build targets macOS 15.5. |
+| Linux AMD64 native/container | Verified on Ubuntu 24.04.5; container uses pinned Debian Bookworm. |
+| Linux ARM64 native | Verified on Ubuntu 24.04.5. |
 | Linux ARM64 container | Deferred for release; native diagnostic smoke passed. |
 | macOS AMD64 | Deferred; no matching pinned runtime archive. |
 | Windows AMD64 | Deferred by scope. |
+
+Verification includes builds and real-model HTTP checks on native architecture runners:
+[CI evidence](https://github.com/calvintvu/modelpicker/actions/runs/40779512907).
+Other OS versions are not verified.
 
 [Startup observations](docs/setup-observations.md) describe one measured machine.
 Concurrency safety, overload handling, throughput, and load testing are deferred.
@@ -176,3 +180,6 @@ The same bundle is used across targets.
 Source: [MIT](LICENSE). Model: Apache-2.0. Dependency/model attribution and
 redistribution requirements: [third-party notices](THIRD_PARTY_NOTICES.md).
 Development checks and explicit model smoke: [testing](docs/testing.md).
+
+The initial release format is source with local Make or Docker Compose builds.
+See the [release process](docs/releasing.md); prebuilt binaries and registry images are outside this release.
