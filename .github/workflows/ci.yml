@@ -1,0 +1,156 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      real_model:
+        description: Download the model and run real-model smoke checks on each target
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  native:
+    name: Native ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            target: linux-amd64
+            goos: linux
+            goarch: amd64
+            library: libonnxruntime.so
+          - runner: ubuntu-24.04-arm
+            target: linux-arm64
+            goos: linux
+            goarch: arm64
+            library: libonnxruntime.so
+          - runner: macos-15
+            target: darwin-arm64
+            goos: darwin
+            goarch: arm64
+            library: libonnxruntime.dylib
+    env:
+      CGO_ENABLED: "1"
+      CGO_LDFLAGS: -L${{ github.workspace }}/lib/${{ matrix.target }}
+      TEST_ONNX_RUNTIME_PATH: ${{ github.workspace }}/lib/${{ matrix.target }}/lib/${{ matrix.library }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: 1.27.3
+      - name: Check toolchain and native architecture
+        env:
+          EXPECTED_GOOS: ${{ matrix.goos }}
+          EXPECTED_GOARCH: ${{ matrix.goarch }}
+        run: |
+          go version
+          uname -m
+          test "$(go env GOVERSION)" = go1.27.3
+          test "$(go env GOOS)" = "$EXPECTED_GOOS"
+          test "$(go env GOARCH)" = "$EXPECTED_GOARCH"
+      - name: Install pinned native dependencies
+        run: make deps
+      - name: Check formatting
+        run: test -z "$(git ls-files -z '*.go' | xargs -0 gofmt -l)"
+      - name: Vet and test
+        run: |
+          go vet ./...
+          go test ./... -count=1
+      - name: Build service
+        run: make build
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        if: github.event_name == 'workflow_dispatch' && inputs.real_model
+        with:
+          python-version: 3.13.18
+      - name: Download pinned model
+        if: github.event_name == 'workflow_dispatch' && inputs.real_model
+        env:
+          MODEL_DIR: ${{ runner.temp }}/laya-model
+          HF_HOME: ${{ runner.temp }}/hf-home
+          HF_HUB_DISABLE_IMPLICIT_TOKEN: "1"
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          python -m venv "$RUNNER_TEMP/hf"
+          "$RUNNER_TEMP/hf/bin/pip" install --require-hashes -r docker/model-download-requirements.txt
+          export PATH="$RUNNER_TEMP/hf/bin:$PATH"
+          make model
+      - name: Real-model native HTTP smoke
+        if: github.event_name == 'workflow_dispatch' && inputs.real_model
+        env:
+          MODEL_DIR: ${{ runner.temp }}/laya-model
+          ONNX_RUNTIME_PATH: ${{ env.TEST_ONNX_RUNTIME_PATH }}
+          CONFIG_PATH: ${{ github.workspace }}/testdata/smoke.yaml
+          LISTEN_ADDR: 127.0.0.1:8080
+          ROUTER_SMOKE_URL: http://127.0.0.1:8080
+        run: |
+          API_KEY=$(openssl rand -hex 32)
+          export API_KEY
+          echo "::add-mask::$API_KEY"
+          ./ez-model-router-bin > "$RUNNER_TEMP/router.log" 2>&1 &
+          router_pid=$!
+          trap 'kill "$router_pid" 2>/dev/null || true; wait "$router_pid" || true' EXIT
+          go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/smoke.log"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.real_model
+        with:
+          name: native-smoke-${{ matrix.target }}
+          path: |
+            ${{ runner.temp }}/router.log
+            ${{ runner.temp }}/smoke.log
+          if-no-files-found: ignore
+
+  container:
+    name: Linux AMD64 container
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build service and downloader images
+        run: |
+          test "$(uname -m)" = x86_64
+          docker build --platform linux/amd64 -t ez-model-router:ci .
+          docker build --platform linux/amd64 -f docker/model-download.Dockerfile -t ez-model-router-download:ci .
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        if: github.event_name == 'workflow_dispatch' && inputs.real_model
+        with:
+          go-version: 1.27.3
+      - name: Real-model Compose HTTP smoke
+        if: github.event_name == 'workflow_dispatch' && inputs.real_model
+        env:
+          MODEL_DIR: ${{ runner.temp }}/laya-model
+          CONFIG_PATH: ${{ github.workspace }}/testdata/smoke.yaml
+          ROUTER_SMOKE_URL: http://127.0.0.1:8080
+          CGO_LDFLAGS: -L${{ github.workspace }}/lib/linux-amd64
+        run: |
+          make deps
+          API_KEY=$(openssl rand -hex 32)
+          export API_KEY
+          echo "::add-mask::$API_KEY"
+          trap 'docker compose logs --no-color router > "$RUNNER_TEMP/router.log" 2>&1 || true; docker compose down' EXIT
+          docker compose run --build --rm model-download
+          docker compose up --build -d router
+          go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/smoke.log"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.real_model
+        with:
+          name: container-smoke-linux-amd64
+          path: |
+            ${{ runner.temp }}/router.log
+            ${{ runner.temp }}/smoke.log
+          if-no-files-found: ignore
