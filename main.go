@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -75,41 +76,15 @@ func runServer() error {
 	if listenAddr == "" {
 		listenAddr = ":8080"
 	}
-	mux := http.NewServeMux()
 	server := &http.Server{
 		Addr:              listenAddr,
-		Handler:           mux,
+		Handler:           newHandler(apiKey, cfg, session),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      writeTimeout,
 		IdleTimeout:       120 * time.Second,
 		MaxHeaderBytes:    maxHeaderBytes,
 	}
-
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
-
-	mux.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
-		var req inference.ModelRouteRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "invalid JSON body", http.StatusBadRequest)
-			return
-		}
-		if req.Prompt == "" {
-			http.Error(w, "prompt is required", http.StatusBadRequest)
-			return
-		}
-		routeResponse, err := inference.Route(r, cfg, req.Prompt, session)
-		if err != nil {
-			log.Printf("route failed: %v", err)
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(routeResponse)
-	})))
 
 	serverErrors := make(chan error, 1)
 
@@ -156,4 +131,39 @@ func serverWriteTimeout() (time.Duration, error) {
 		return 0, errors.New("WRITE_TIMEOUT must be a positive Go duration, for example 60s")
 	}
 	return timeout, nil
+}
+
+func newHandler(apiKey string, cfg *config.Config, session inference.Chooser) http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	mux.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
+		var req inference.ModelRouteRequest
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			http.Error(w, "invalid JSON body", http.StatusBadRequest)
+			return
+		}
+		if err := decoder.Decode(&struct{}{}); err != io.EOF {
+			http.Error(w, "invalid JSON body", http.StatusBadRequest)
+			return
+		}
+		if req.Prompt == "" {
+			http.Error(w, "prompt is required", http.StatusBadRequest)
+			return
+		}
+		routeResponse, err := inference.Route(r, cfg, req.Prompt, session)
+		if err != nil {
+			log.Printf("route failed: %v", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(routeResponse)
+	})))
+
+	return mux
 }
