@@ -14,4 +14,4 @@ state was not controlled. Both policies returned valid model selections without 
 These are startup snapshots, not peak request memory, minimum RAM, or load benchmarks.
 
 The bundle occupies about 1.6 GiB. Allow 4 GiB for model/temporary transfer files,
-plus image/build storage. Native AMD64 measurements remain pending.
+plus image/build storage. Native AMD64 startup-time and memory measurements remain pending.
