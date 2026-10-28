@@ -46,8 +46,28 @@ For containers, use the same fixture/key with the [quickstart](../README.md#quic
 format/vet/test/build jobs, plus Linux AMD64 service/downloader image builds.
 Toolchains, native archives, and action revisions are pinned. No images are published.
 
-Manual dispatch with `real_model` enabled adds native and Compose smoke checks.
+Manual dispatch with `real_model` enabled adds native smoke and Compose lifecycle checks.
 Each of four runners downloads about 1.6 GiB; ordinary PRs do not download weights.
-Temporary keys are masked. Per-target artifacts retain service and smoke logs.
-A defined workflow is not executed evidence: hosted runs and native AMD64 model
-verification remain pending. Emulation does not establish native compatibility.
+Temporary keys are masked. Artifacts retain service/smoke logs and model-cache integrity records.
+The container check requires graceful exit 0, cached restart without the downloader,
+unchanged model hashes/sizes/timestamps, and a valid response using the README default policy.
+Fixture requests use two tiers without fallback; default-policy logs must show no inference fallback.
+
+## Verified candidate
+
+[2026-10-28 run](https://github.com/calvintvu/modelpicker/actions/runs/40779512907)
+passed all four jobs at `446d1617889d81cc6f639bfdef1daf49e780915c`:
+
+| Target | Environment | Result |
+| --- | --- | --- |
+| Linux AMD64 native | Ubuntu 24.04.5, GCC 13.3.0 | Build, tests, vet, real-model health/auth/pick passed. |
+| Linux ARM64 native | Ubuntu 24.04.5, GCC 13.3.0 | Build, tests, vet, real-model health/auth/pick passed. |
+| macOS ARM64 native | macOS 15.7.9, Apple clang 17.0.0 | Build, tests, vet, real-model health/auth/pick passed. |
+| Linux AMD64 container | Ubuntu 24.04.5 host, pinned Bookworm image | Fresh download, smoke, shutdown, cache reuse, restart, and default-policy checks passed. |
+
+All use Go 1.27.3, ONNX Runtime 1.29.0, tokenizers v1.27.0, and the README's pinned model revision.
+CI's download-only Python is 3.13.17, available on all three native runners.
+The downloader image retains its separate Python 3.13.18 pin.
+macOS CI targets 15.5 to match the tokenizer archive; only the listed OS versions are verified.
+The upstream wrappers still emit a duplicate `-ldl` warning on macOS; checks pass.
+These are functional checks, not selection-quality evaluations or load benchmarks.
