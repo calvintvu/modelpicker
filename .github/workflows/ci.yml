@@ -41,8 +41,10 @@ jobs:
             goos: darwin
             goarch: arm64
             library: libonnxruntime.dylib
+            macos_target: "15.5"
     env:
       CGO_ENABLED: "1"
+      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos_target || '' }}
       CGO_LDFLAGS: -L${{ github.workspace }}/lib/${{ matrix.target }}
       TEST_ONNX_RUNTIME_PATH: ${{ github.workspace }}/lib/${{ matrix.target }}/lib/${{ matrix.library }}
     steps:
@@ -58,7 +60,9 @@ jobs:
           EXPECTED_GOARCH: ${{ matrix.goarch }}
         run: |
           go version
-          uname -m
+          uname -a
+          cc --version
+          if [ "$(uname -s)" = Darwin ]; then sw_vers; else cat /etc/os-release; fi
           test "$(go env GOVERSION)" = go1.27.3
           test "$(go env GOOS)" = "$EXPECTED_GOOS"
           test "$(go env GOARCH)" = "$EXPECTED_GOARCH"
@@ -75,7 +79,8 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
-          python-version: 3.13.18
+          # 3.13.18 has no macOS ARM64 artifact in actions/python-versions.
+          python-version: 3.13.17
       - name: Download pinned model
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         env:
@@ -123,6 +128,8 @@ jobs:
           persist-credentials: false
       - name: Build service and downloader images
         run: |
+          uname -a
+          cat /etc/os-release
           test "$(uname -m)" = x86_64
           docker build --platform linux/amd64 -t modelpicker:ci .
           docker build --platform linux/amd64 -f docker/model-download.Dockerfile -t modelpicker-download:ci .
@@ -130,7 +137,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
           go-version: 1.27.3
-      - name: Real-model Compose HTTP smoke
+      - name: Real-model Compose lifecycle and README checks
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         env:
           MODEL_DIR: ${{ runner.temp }}/laya-model
@@ -146,6 +153,29 @@ jobs:
           docker compose run --build --rm model-download
           docker compose up --build -d picker
           go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/smoke.log"
+          find "$MODEL_DIR" -type f ! -path '*/.cache/*' -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/model-before.sha256"
+          find "$MODEL_DIR" -type f ! -path '*/.cache/*' -printf '%P %s %T@\n' | sort > "$RUNNER_TEMP/model-before.stat"
+          docker compose stop picker
+          test "$(docker inspect --format '{{.State.ExitCode}}' "$(docker compose ps -aq picker)")" = 0
+          docker compose logs --no-color picker > "$RUNNER_TEMP/picker-first.log"
+          docker compose down
+          docker compose up -d picker
+          test -z "$(docker compose ps -aq model-download)"
+          go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/restart-smoke.log"
+          sha256sum --check "$RUNNER_TEMP/model-before.sha256"
+          find "$MODEL_DIR" -type f ! -path '*/.cache/*' -printf '%P %s %T@\n' | sort > "$RUNNER_TEMP/model-after.stat"
+          diff -u "$RUNNER_TEMP/model-before.stat" "$RUNNER_TEMP/model-after.stat"
+          docker compose logs --no-color picker > "$RUNNER_TEMP/picker-restart.log"
+          docker compose down
+          export CONFIG_PATH="$PWD/config.yaml"
+          docker compose up -d picker
+          curl -fsS --max-time 5 --retry 90 --retry-all-errors --retry-delay 2 --retry-max-time 180 http://127.0.0.1:8080/healthz
+          curl -fsS --max-time 120 http://127.0.0.1:8080/v1/pick \
+            -H "Authorization: Bearer $API_KEY" -H 'Content-Type: application/json' \
+            -d '{"prompt":"Write a Go function."}' | tee "$RUNNER_TEMP/readme-response.json"
+          jq -e 'keys == ["model", "tier"] and (.model | type == "string" and length > 0) and (.tier | type == "string" and length > 0)' "$RUNNER_TEMP/readme-response.json"
+          docker compose logs --no-color picker > "$RUNNER_TEMP/picker-readme.log"
+          ! grep -q 'inference failed' "$RUNNER_TEMP"/picker-*.log
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always() && github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
@@ -153,4 +183,12 @@ jobs:
           path: |
             ${{ runner.temp }}/picker.log
             ${{ runner.temp }}/smoke.log
+            ${{ runner.temp }}/picker-first.log
+            ${{ runner.temp }}/picker-restart.log
+            ${{ runner.temp }}/picker-readme.log
+            ${{ runner.temp }}/restart-smoke.log
+            ${{ runner.temp }}/readme-response.json
+            ${{ runner.temp }}/model-before.sha256
+            ${{ runner.temp }}/model-before.stat
+            ${{ runner.temp }}/model-after.stat
           if-no-files-found: ignore
