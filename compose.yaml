@@ -11,7 +11,6 @@ services:
       dockerfile: docker/model-download.Dockerfile
     # Keep this revision in sync with the native `make model` command.
     command:
-      - download
       - receptron/laya-onnx
       - --revision
       - 68f27dfe5a27a54fb2b1fefc432f43f972e90868
@@ -25,6 +24,7 @@ services:
           create_host_path: true
   router:
     build: .
+    stop_grace_period: 35s
     ports:
       - "8080:8080"
     environment:
@@ -32,6 +32,7 @@ services:
       CONFIG_PATH: /app/config.yaml
       MODEL_DIR: /models
       LISTEN_ADDR: :8080
+      WRITE_TIMEOUT: ${WRITE_TIMEOUT:-60s}
     volumes:
       - type: bind
         source: ${MODEL_DIR:-./inference/model}
