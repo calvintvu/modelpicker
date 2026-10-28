@@ -46,6 +46,10 @@ func runServer() error {
 	if apiKey == "" {
 		return errors.New("API_KEY is not set")
 	}
+	writeTimeout, err := serverWriteTimeout()
+	if err != nil {
+		return err
+	}
 
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
@@ -77,7 +81,7 @@ func runServer() error {
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
-		WriteTimeout:      10 * time.Second,
+		WriteTimeout:      writeTimeout,
 		IdleTimeout:       120 * time.Second,
 		MaxHeaderBytes:    maxHeaderBytes,
 	}
@@ -140,4 +144,16 @@ func runServer() error {
 
 	log.Println("server stopped")
 	return exitErr
+}
+
+func serverWriteTimeout() (time.Duration, error) {
+	value := os.Getenv("WRITE_TIMEOUT")
+	if value == "" {
+		return time.Minute, nil
+	}
+	timeout, err := time.ParseDuration(value)
+	if err != nil || timeout <= 0 {
+		return 0, errors.New("WRITE_TIMEOUT must be a positive Go duration, for example 60s")
+	}
+	return timeout, nil
 }
