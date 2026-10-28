@@ -41,6 +41,37 @@ The Rust notices also cover the embedded standard-library dependencies. The runt
 
 ## Distribution requirements
 
+### Optional model downloader image
+
+`docker/model-download.Dockerfile` uses Python 3.13.18 and Hugging Face CLI
+(`huggingface_hub`) 2.3.0. Its Python dependencies are pinned with artifact hashes in
+`docker/model-download-requirements.txt`. They are separate from the Go service image.
+
+The installed Linux dependency terms are:
+
+| Components | Terms |
+| --- | --- |
+| `huggingface_hub` 2.3.0, `hf-xet` 1.7.0 | Apache-2.0 |
+| `anyio` 4.15.1, `filelock` 4.2.4, `h11` 0.16.0, PyYAML 6.0.3, `truststore` 0.10.5 | MIT |
+| `click` 8.5.0, `fsspec` 2026.9.0, `httpcore2` 2.16.0, `httpx2` 2.16.0, `idna` 3.20 | BSD-3-Clause |
+| `packaging` 26.3 | Apache-2.0 OR BSD-2-Clause |
+| `tqdm` 4.70.1 | MPL-2.0 AND MIT |
+| `typing_extensions` 4.16.0 | PSF-2.0 |
+
+The image preserves each wheel's original license files under
+`/usr/local/lib/python3.13/site-packages/*.dist-info/licenses/`.
+It also preserves the base image's Python license at
+`/usr/local/lib/python3.13/LICENSE.txt`, pip 26.2.2's MIT and vendored notices,
+and Debian package copyright files under `/usr/share/doc/`.
+Retain these files when distributing or modifying the downloader image.
+For `tqdm`, provide access to the corresponding unmodified source when distributing
+the image; its versioned source distribution is available from
+[PyPI](https://pypi.org/project/tqdm/4.70.1/#files).
+Final base-image source-access review and the native `hf-xet` dependency notice
+review remain release gates before image publication.
+
+### Router binary and image
+
 Include the following alongside the executable in each binary distribution:
 
 ```text

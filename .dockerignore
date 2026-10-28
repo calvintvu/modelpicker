@@ -20,3 +20,6 @@ utils/**
 !THIRD_PARTY_NOTICES.md
 !third_party/
 !third_party/**
+!docker/
+docker/**
+!docker/model-download-requirements.txt
