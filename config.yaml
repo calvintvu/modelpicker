@@ -1,8 +1,10 @@
+# Example policy. Model IDs are labels, not a verified provider catalog.
 classifier:
   question: "What kind of request is this?"
-  # optional; defaults to the laya_config.json value for len(tiers)
+  # Omit or use 0 for tier-count calibration; positive finite values override it.
   # temperature: 1.76
 
+# Used for inference errors, not low confidence or startup failures.
 default_tier: general
 
 tiers:
