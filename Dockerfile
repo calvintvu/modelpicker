@@ -16,11 +16,11 @@ FROM debian:bookworm-slim@sha256:7ff6ba31527b9e336162fa061746c366c4b2032f4d2cff2
 
 # This pinned base already supplies glibc and libstdc++6.
 WORKDIR /app
-COPY --from=build /src/ez-model-router-bin /usr/local/bin/ez-model-router
+COPY --from=build /src/modelpicker-bin /usr/local/bin/modelpicker
 COPY --from=build /src/lib/linux-*/lib/libonnxruntime.so.*.* /usr/local/lib/libonnxruntime.so
 COPY config.yaml ./config.yaml
-COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/licenses/ez-model-router/
-COPY third_party/ /usr/share/licenses/ez-model-router/third_party/
+COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/licenses/modelpicker/
+COPY third_party/ /usr/share/licenses/modelpicker/third_party/
 
 ENV CONFIG_PATH=/app/config.yaml \
     MODEL_DIR=/models \
@@ -28,4 +28,4 @@ ENV CONFIG_PATH=/app/config.yaml \
     LISTEN_ADDR=:8080
 USER 65532:65532
 EXPOSE 8080
-ENTRYPOINT ["/usr/local/bin/ez-model-router"]
+ENTRYPOINT ["/usr/local/bin/modelpicker"]

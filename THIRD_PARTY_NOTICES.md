@@ -1,6 +1,6 @@
 # Third-party licenses and attribution
 
-The router source is licensed under [MIT](LICENSE), copyright 2026 Calvin Vu.
+The picker source is licensed under [MIT](LICENSE), copyright 2026 Calvin Vu.
 Third-party code, model files, and native libraries retain their own licenses and notices.
 
 ## Model bundle
@@ -72,21 +72,22 @@ lockfile, and matching Rust 1.99.0 notices are included under
 [third_party/hf-xet](third_party/hf-xet/DEPENDENCIES.md).
 [Container source access](third_party/containers/SOURCES.md) records the complete
 Debian package inventories and corresponding source archive locations.
+Those reviewed inventories use the former image label `router` for the picker service.
 When publishing images, provide recipients corresponding source access under the
 applicable terms; these inventories do not create a written source offer.
 
-### Router binary and image
+### Picker binary and image
 
 Include the following alongside the executable in each binary distribution:
 
 ```text
-ez-model-router-bin
+modelpicker-bin
 LICENSE
 THIRD_PARTY_NOTICES.md
 third_party/
 ```
 
-For container releases, copy the license and notice bundle into `/usr/share/licenses/ez-model-router/` in the final image.
+For container releases, copy the license and notice bundle into `/usr/share/licenses/modelpicker/` in the final image.
 Retain the runtime's license and notice files whenever distributing the runtime libraries.
 For separately distributed model bundles, include the model license text and attribution with the model files.
 

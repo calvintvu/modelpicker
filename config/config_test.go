@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestLoadConfigRejectsUnusableRoutingValues(t *testing.T) {
+func TestLoadConfigRejectsUnusableSelectionValues(t *testing.T) {
 	for _, tc := range []struct{ name, yaml string }{
 		{"blank model", "tiers: [{name: only, models: [' ']}]"},
 		{"blank tier name", "tiers: [{name: ' ', models: [model]}]"},
@@ -22,13 +22,13 @@ func TestLoadConfigRejectsUnusableRoutingValues(t *testing.T) {
 				t.Fatal(err)
 			}
 			if _, err := LoadConfig(path); err == nil {
-				t.Fatal("expected invalid routing configuration to be rejected")
+				t.Fatal("expected invalid selection configuration to be rejected")
 			}
 		})
 	}
 }
 
-func TestRoutingConfigurationBoundaries(t *testing.T) {
+func TestSelectionConfigurationBoundaries(t *testing.T) {
 	for _, tc := range []struct{ name, yaml, want string }{
 		{"unknown field", "unknown: true\ntiers: [{name: a, models: [m]}]", "field unknown"},
 		{"no tiers", "tiers: []", "at least one tier"},

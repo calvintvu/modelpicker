@@ -93,7 +93,7 @@ func (config *Config) validate() error {
 	if config.DefaultTier != "" && !seen[config.DefaultTier] {
 		return fmt.Errorf("default_tier %q is not a defined tier", config.DefaultTier)
 	}
-	// negative temperature reverses the routing
+	// negative temperature reverses the selection
 	if config.Classifier.Temperature < 0 || math.IsNaN(config.Classifier.Temperature) || math.IsInf(config.Classifier.Temperature, 0) {
 		return fmt.Errorf("classifier.temperature must be finite and >= 0, got %v", config.Classifier.Temperature)
 	}

@@ -95,21 +95,21 @@ jobs:
           ONNX_RUNTIME_PATH: ${{ env.TEST_ONNX_RUNTIME_PATH }}
           CONFIG_PATH: ${{ github.workspace }}/testdata/smoke.yaml
           LISTEN_ADDR: 127.0.0.1:8080
-          ROUTER_SMOKE_URL: http://127.0.0.1:8080
+          PICKER_SMOKE_URL: http://127.0.0.1:8080
         run: |
           API_KEY=$(openssl rand -hex 32)
           export API_KEY
           echo "::add-mask::$API_KEY"
-          ./ez-model-router-bin > "$RUNNER_TEMP/router.log" 2>&1 &
-          router_pid=$!
-          trap 'kill "$router_pid" 2>/dev/null || true; wait "$router_pid" || true' EXIT
+          ./modelpicker-bin > "$RUNNER_TEMP/picker.log" 2>&1 &
+          picker_pid=$!
+          trap 'kill "$picker_pid" 2>/dev/null || true; wait "$picker_pid" || true' EXIT
           go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/smoke.log"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always() && github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
           name: native-smoke-${{ matrix.target }}
           path: |
-            ${{ runner.temp }}/router.log
+            ${{ runner.temp }}/picker.log
             ${{ runner.temp }}/smoke.log
           if-no-files-found: ignore
 
@@ -124,8 +124,8 @@ jobs:
       - name: Build service and downloader images
         run: |
           test "$(uname -m)" = x86_64
-          docker build --platform linux/amd64 -t ez-model-router:ci .
-          docker build --platform linux/amd64 -f docker/model-download.Dockerfile -t ez-model-router-download:ci .
+          docker build --platform linux/amd64 -t modelpicker:ci .
+          docker build --platform linux/amd64 -f docker/model-download.Dockerfile -t modelpicker-download:ci .
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
@@ -135,22 +135,22 @@ jobs:
         env:
           MODEL_DIR: ${{ runner.temp }}/laya-model
           CONFIG_PATH: ${{ github.workspace }}/testdata/smoke.yaml
-          ROUTER_SMOKE_URL: http://127.0.0.1:8080
+          PICKER_SMOKE_URL: http://127.0.0.1:8080
           CGO_LDFLAGS: -L${{ github.workspace }}/lib/linux-amd64
         run: |
           make deps
           API_KEY=$(openssl rand -hex 32)
           export API_KEY
           echo "::add-mask::$API_KEY"
-          trap 'docker compose logs --no-color router > "$RUNNER_TEMP/router.log" 2>&1 || true; docker compose down' EXIT
+          trap 'docker compose logs --no-color picker > "$RUNNER_TEMP/picker.log" 2>&1 || true; docker compose down' EXIT
           docker compose run --build --rm model-download
-          docker compose up --build -d router
+          docker compose up --build -d picker
           go test . -run '^TestRealModelHTTP$' -count=1 -v -timeout=10m | tee "$RUNNER_TEMP/smoke.log"
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always() && github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
           name: container-smoke-linux-amd64
           path: |
-            ${{ runner.temp }}/router.log
+            ${{ runner.temp }}/picker.log
             ${{ runner.temp }}/smoke.log
           if-no-files-found: ignore

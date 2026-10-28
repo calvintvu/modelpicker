@@ -27,7 +27,7 @@ func TestRequireAPIKey(t *testing.T) {
 			called = true
 			w.WriteHeader(http.StatusNoContent)
 		}))
-		r := httptest.NewRequest("POST", "/v1/route", nil)
+		r := httptest.NewRequest("POST", "/v1/pick", nil)
 		r.Header.Set("Authorization", tc.header)
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, r)
