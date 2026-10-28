@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestStartupConfiguration(t *testing.T) {
@@ -21,7 +22,7 @@ func TestStartupConfiguration(t *testing.T) {
 		{name: "unreadable dotenv path", directory: true, apiKey: "external-test-key", want: "failed to load .env"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			for _, key := range []string{"API_KEY", "CONFIG_PATH", "MODEL_DIR", "ONNX_RUNTIME_PATH", "LISTEN_ADDR"} {
+			for _, key := range []string{"API_KEY", "CONFIG_PATH", "MODEL_DIR", "ONNX_RUNTIME_PATH", "LISTEN_ADDR", "WRITE_TIMEOUT"} {
 				t.Setenv(key, "")
 				if err := os.Unsetenv(key); err != nil {
 					t.Fatal(err)
@@ -57,6 +58,34 @@ func TestStartupConfiguration(t *testing.T) {
 			}
 			if tc.apiKey != "" && os.Getenv("API_KEY") != tc.apiKey {
 				t.Fatal("dotenv replaced the external API key")
+			}
+		})
+	}
+}
+
+func TestServerWriteTimeout(t *testing.T) {
+	for _, tc := range []struct {
+		value string
+		want  time.Duration
+	}{
+		{"", time.Minute},
+		{"90s", 90 * time.Second},
+		{"250ms", 250 * time.Millisecond},
+	} {
+		t.Run(tc.value, func(t *testing.T) {
+			t.Setenv("WRITE_TIMEOUT", tc.value)
+			got, err := serverWriteTimeout()
+			if err != nil || got != tc.want {
+				t.Fatalf("got %v, %v; want %v", got, err, tc.want)
+			}
+		})
+	}
+	for _, value := range []string{"0", "-1s", "invalid-secret-value", "999999999999999999999h"} {
+		t.Run(value, func(t *testing.T) {
+			t.Setenv("WRITE_TIMEOUT", value)
+			_, err := serverWriteTimeout()
+			if err == nil || !strings.Contains(err.Error(), "WRITE_TIMEOUT") || strings.Contains(err.Error(), "invalid-secret-value") {
+				t.Fatalf("expected actionable error without echoing the value, got %v", err)
 			}
 		})
 	}
