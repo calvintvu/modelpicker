@@ -1,8 +1,28 @@
-# Download once with `make model`, then set API_KEY in .env or the environment.
-# Start: docker compose up --build -d
+# Set API_KEY in .env or the environment before running Compose.
+# First setup: docker compose run --build --rm model-download && docker compose up --build -d router
+# Later starts: docker compose up --build -d router
 # Stop: docker compose down (the host model directory is preserved).
 # Builds use the local engine's CPU architecture; emulation can fail or be slow.
 services:
+  model-download:
+    profiles: [setup]
+    build:
+      context: .
+      dockerfile: docker/model-download.Dockerfile
+    # Keep this revision in sync with the native `make model` command.
+    command:
+      - download
+      - receptron/laya-onnx
+      - --revision
+      - 68f27dfe5a27a54fb2b1fefc432f43f972e90868
+      - --local-dir
+      - /models
+    volumes:
+      - type: bind
+        source: ${MODEL_DIR:-./inference/model}
+        target: /models
+        bind:
+          create_host_path: true
   router:
     build: .
     ports:
