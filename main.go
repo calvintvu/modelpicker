@@ -133,7 +133,7 @@ func serverWriteTimeout() (time.Duration, error) {
 	return timeout, nil
 }
 
-func newHandler(apiKey string, cfg *config.Config, session inference.Chooser) http.Handler {
+func newHandler(apiKey string, cfg *config.Config, session *inference.InferenceSession) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
