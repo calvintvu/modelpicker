@@ -67,8 +67,13 @@ Retain these files when distributing or modifying the downloader image.
 For `tqdm`, provide access to the corresponding unmodified source when distributing
 the image; its versioned source distribution is available from
 [PyPI](https://pypi.org/project/tqdm/4.70.1/#files).
-Final base-image source-access review and the native `hf-xet` dependency notice
-review remain release gates before image publication.
+The native `hf-xet` normal/build dependency inventory, original notices, upstream
+lockfile, and matching Rust 1.99.0 notices are included under
+[third_party/hf-xet](third_party/hf-xet/DEPENDENCIES.md).
+[Container source access](third_party/containers/SOURCES.md) records the complete
+Debian package inventories and corresponding source archive locations.
+When publishing images, provide recipients corresponding source access under the
+applicable terms; these inventories do not create a written source offer.
 
 ### Router binary and image
 
@@ -85,8 +90,9 @@ For container releases, copy the license and notice bundle into `/usr/share/lice
 Retain the runtime's license and notice files whenever distributing the runtime libraries.
 For separately distributed model bundles, include the model license text and attribution with the model files.
 
-Container packaging must also retain the base image's package copyright files and applicable source-access information.
-The final image's operating-system libraries and package versions must be reviewed when the Dockerfile exists.
+Container packaging retains the base image's package copyright files and applicable source-access information.
+The pinned runtime and downloader base package versions are recorded in the
+[container inventories](third_party/containers/SOURCES.md), including exact source archive references.
 System libraries supplied by the user's OS are separate from the native archives reviewed here.
 
 After dependency, model, compiler, or packaging changes, update this inventory and the notices before publishing artifacts.
