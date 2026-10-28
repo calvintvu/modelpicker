@@ -1,0 +1,9 @@
+classifier:
+  question: What kind of request is this?
+tiers:
+  - name: code
+    description: programming
+    models: [test/code]
+  - name: general
+    description: conversation
+    models: [test/general]
