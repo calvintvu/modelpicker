@@ -4,8 +4,8 @@ COPY docker/model-download-requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir --require-hashes --root-user-action=ignore -r /tmp/requirements.txt
 COPY --chmod=755 docker/download-model.sh /usr/local/bin/download-model
 
-COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/licenses/ez-model-router/
-COPY third_party/ /usr/share/licenses/ez-model-router/third_party/
+COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/licenses/modelpicker/
+COPY third_party/ /usr/share/licenses/modelpicker/third_party/
 
 # Public model downloads need no credentials or persistent global cache.
 ENV HF_HOME=/tmp/huggingface \

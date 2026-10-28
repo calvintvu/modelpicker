@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/calvinvu/ez-model-router/config"
-	"github.com/calvinvu/ez-model-router/inference"
+	"github.com/calvintvu/modelpicker/config"
+	"github.com/calvintvu/modelpicker/inference"
 )
 
 func TestRealModelHTTP(t *testing.T) {
-	baseURL := strings.TrimRight(os.Getenv("ROUTER_SMOKE_URL"), "/")
+	baseURL := strings.TrimRight(os.Getenv("PICKER_SMOKE_URL"), "/")
 	if baseURL == "" {
-		t.Skip("set ROUTER_SMOKE_URL to run the explicit real-model HTTP check")
+		t.Skip("set PICKER_SMOKE_URL to run the explicit real-model HTTP check")
 	}
 	key := os.Getenv("API_KEY")
 	if key == "" {
@@ -55,7 +55,7 @@ func TestRealModelHTTP(t *testing.T) {
 	client := &http.Client{Timeout: 120 * time.Second}
 	defer client.CloseIdleConnections()
 	for _, authenticated := range []bool{false, true} {
-		request, err := http.NewRequest(http.MethodPost, baseURL+"/v1/route", strings.NewReader(`{"prompt":"Explain how a Go function works."}`))
+		request, err := http.NewRequest(http.MethodPost, baseURL+"/v1/pick", strings.NewReader(`{"prompt":"Explain how a Go function works."}`))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -70,27 +70,27 @@ func TestRealModelHTTP(t *testing.T) {
 		if !authenticated {
 			response.Body.Close()
 			if response.StatusCode != http.StatusUnauthorized || response.Header.Get("WWW-Authenticate") != "Bearer" {
-				t.Fatal("unauthenticated route did not return HTTP 401 with a bearer challenge")
+				t.Fatal("unauthenticated pick did not return HTTP 401 with a bearer challenge")
 			}
 			continue
 		}
 		defer response.Body.Close()
 		if response.StatusCode != http.StatusOK || response.Header.Get("Content-Type") != "application/json" {
-			t.Fatalf("authenticated route returned HTTP %d or an unexpected content type", response.StatusCode)
+			t.Fatalf("authenticated pick returned HTTP %d or an unexpected content type", response.StatusCode)
 		}
-		var result inference.ModelRouteResponse
+		var result inference.ModelPickResponse
 		decoder := json.NewDecoder(io.LimitReader(response.Body, maxBodyBytes))
 		decoder.DisallowUnknownFields()
 		if err := decoder.Decode(&result); err != nil {
 			t.Fatal(err)
 		}
 		if err := decoder.Decode(&struct{}{}); err != io.EOF {
-			t.Fatal("route response contains trailing JSON")
+			t.Fatal("pick response contains trailing JSON")
 		}
 		index := slices.IndexFunc(cfg.Tiers, func(tier config.Tier) bool { return tier.Name == result.Tier })
 		if index < 0 || !slices.Contains(cfg.Tiers[index].Models, result.Model) {
-			t.Fatal("route response model is not a member of its configured tier")
+			t.Fatal("pick response model is not a member of its configured tier")
 		}
 	}
-	t.Logf("real-model health/auth/route membership passed; client target %s/%s", runtime.GOOS, runtime.GOARCH)
+	t.Logf("real-model health/auth/pick membership passed; client target %s/%s", runtime.GOOS, runtime.GOARCH)
 }

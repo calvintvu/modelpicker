@@ -13,9 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/calvinvu/ez-model-router/config"
-	"github.com/calvinvu/ez-model-router/inference"
-	"github.com/calvinvu/ez-model-router/middleware"
+	"github.com/calvintvu/modelpicker/config"
+	"github.com/calvintvu/modelpicker/inference"
+	"github.com/calvintvu/modelpicker/middleware"
 	"github.com/joho/godotenv"
 	"go.yaml.in/yaml/v3"
 )
@@ -139,9 +139,9 @@ func newHandler(apiKey string, cfg *config.Config, session *inference.InferenceS
 		w.WriteHeader(http.StatusOK)
 	})
 
-	mux.Handle("POST /v1/route", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux.Handle("POST /v1/pick", middleware.RequireAPIKey(apiKey)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
-		var req inference.ModelRouteRequest
+		var req inference.ModelPickRequest
 		decoder := json.NewDecoder(r.Body)
 		if err := decoder.Decode(&req); err != nil {
 			http.Error(w, "invalid JSON body", http.StatusBadRequest)
@@ -155,14 +155,14 @@ func newHandler(apiKey string, cfg *config.Config, session *inference.InferenceS
 			http.Error(w, "prompt is required", http.StatusBadRequest)
 			return
 		}
-		routeResponse, err := inference.Route(r, cfg, req.Prompt, session)
+		pickResponse, err := inference.Pick(r, cfg, req.Prompt, session)
 		if err != nil {
-			log.Printf("route failed: %v", err)
+			log.Printf("model selection failed: %v", err)
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(routeResponse)
+		json.NewEncoder(w).Encode(pickResponse)
 	})))
 
 	return mux

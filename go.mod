@@ -1,4 +1,4 @@
-module github.com/calvinvu/ez-model-router
+module github.com/calvintvu/modelpicker
 
 go 1.27
 

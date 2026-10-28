@@ -1,9 +1,10 @@
-# ez-model-router
+# modelpicker
 
-[![Go version](https://img.shields.io/github/go-mod/go-version/calvintvu/ez-model-router/main)](go.mod) [![CI status](https://github.com/calvintvu/ez-model-router/actions/workflows/ci.yml/badge.svg)](https://github.com/calvintvu/ez-model-router/actions/workflows/ci.yml) [![Source license](https://img.shields.io/github/license/calvintvu/ez-model-router)](LICENSE)
+[![Go version](https://img.shields.io/github/go-mod/go-version/calvintvu/modelpicker/main)](go.mod) [![CI status](https://github.com/calvintvu/modelpicker/actions/workflows/ci.yml/badge.svg)](https://github.com/calvintvu/modelpicker/actions/workflows/ci.yml) [![Source license](https://img.shields.io/github/license/calvintvu/modelpicker)](LICENSE)
 
-A CPU-only router that classifies a prompt into a configured tier and returns a
-random model ID from that tier. It does not call providers or generate completions.
+A CPU-only model picker that uses a decision model to classify a prompt into a
+configured tier, then returns a random model ID from that tier.
+It does not proxy LLM calls or generate completions.
 
 ## Quickstart
 
@@ -13,8 +14,8 @@ Use the engine's CPU architecture; emulation can crash or run slowly.
 ### 1. Clone the repository
 
 ```sh
-git clone https://github.com/calvintvu/ez-model-router.git
-cd ez-model-router
+git clone https://github.com/calvintvu/modelpicker.git
+cd modelpicker
 ```
 
 ### 2. Set your API key
@@ -45,7 +46,7 @@ Wait for this command to succeed before continuing. The bundle needs about **1.6
 Allow **4 GiB** for model/transfer files, plus image/build storage.
 No host Go, Python, or Hugging Face CLI is needed. Repeat downloads reuse unchanged files.
 
-### 4. Start the router
+### 4. Start the picker
 
 ```sh
 docker compose up --build -d
@@ -54,11 +55,11 @@ docker compose up --build -d
 ### 5. Wait for startup
 
 ```sh
-docker compose logs -f router
+docker compose logs -f picker
 ```
 
 Model loading can take several minutes. Wait for `server starting on :8080`.
-Press Ctrl+C to leave the log view; the router keeps running.
+Press Ctrl+C to leave the log view; the picker keeps running.
 
 ### 6. Check health
 
@@ -68,12 +69,12 @@ curl -i http://localhost:8080/healthz
 
 Expect HTTP 200 with an empty body. Health checks HTTP responsiveness, not inference.
 
-### 7. Route a prompt
+### 7. Pick a model for a prompt
 
 Replace `YOUR_API_KEY` with the same key saved in `.env`:
 
 ```sh
-curl http://localhost:8080/v1/route \
+curl http://localhost:8080/v1/pick \
   -H 'Authorization: Bearer YOUR_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{"prompt":"Write a Go function."}'
@@ -102,7 +103,7 @@ See [container details](docs/container-setup.md) for custom mounts and troublesh
 
 ## Configuration
 
-Edit `config.yaml`, then recreate the service with `docker compose up -d --force-recreate router`.
+Edit `config.yaml`, then recreate the service with `docker compose up -d --force-recreate picker`.
 A small policy:
 
 ```yaml
@@ -123,7 +124,7 @@ All fields, environment defaults, and precedence: [configuration reference](docs
 
 Requires Go 1.27.3, Make, a C/C++ toolchain, curl, tar, shasum, and `hf`.
 For the CLI, use `uv tool install huggingface_hub==2.3.0` with uv installed.
-First complete the clone and API-key steps above. Stop any existing router on port 8080.
+First complete the clone and API-key steps above. Stop any existing picker on port 8080.
 
 ### 1. Download the model
 
@@ -142,13 +143,13 @@ make build
 This installs checksum-pinned ONNX Runtime 1.29.0 and tokenizers v1.27.0 for the local target.
 Linux uses glibc; Alpine/musl is not verified.
 
-### 3. Start the router
+### 3. Start the picker
 
 ```sh
-./ez-model-router-bin
+./modelpicker-bin
 ```
 
-The service reads the key from `.env`. Use the health and routing checks above.
+The service reads the key from `.env`. Use the health and selection checks above.
 Press Ctrl+C to stop it.
 
 ## Platform status
@@ -164,7 +165,7 @@ Press Ctrl+C to stop it.
 
 [Startup observations](docs/setup-observations.md) describe one measured machine.
 Concurrency safety, overload handling, throughput, and load testing are deferred.
-Routing-quality evaluations are also pending. No production capacity is claimed.
+Selection-quality evaluations are also pending. No production capacity is claimed.
 
 ## Model and licenses
 

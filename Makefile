@@ -54,10 +54,10 @@ run: deps
 	go run .
 
 build: deps
-	go build -o ez-model-router-bin .
+	go build -o modelpicker-bin .
 
 clean:
-	rm -f ez-model-router-bin
+	rm -f modelpicker-bin
 
 model:
 	@command -v hf >/dev/null 2>&1 || { echo "Hugging Face CLI (hf) not found. Install with: uv tool install huggingface_hub" >&2; exit 1; }

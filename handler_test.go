@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/calvinvu/ez-model-router/config"
+	"github.com/calvintvu/modelpicker/config"
 )
 
 func TestHTTPContract(t *testing.T) {
@@ -21,7 +21,7 @@ func TestHTTPContract(t *testing.T) {
 	}{
 		{name: "health without auth", method: "GET", path: "/healthz", status: 200},
 		{name: "head health", method: "HEAD", path: "/healthz", status: 200},
-		{name: "missing auth", method: "POST", path: "/v1/route", body: `{"prompt":"hi"}`, status: 401, wantBody: "unauthorized request\n"},
+		{name: "missing auth", method: "POST", path: "/v1/pick", body: `{"prompt":"hi"}`, status: 401, wantBody: "unauthorized request\n"},
 		{name: "empty body", body: "", status: 400, wantBody: "invalid JSON body\n"},
 		{name: "malformed JSON", body: `{`, status: 400, wantBody: "invalid JSON body\n"},
 		{name: "wrong prompt type", body: `{"prompt":23}`, status: 400, wantBody: "invalid JSON body\n"},
@@ -36,14 +36,14 @@ func TestHTTPContract(t *testing.T) {
 		{name: "oversized prompt", body: `{"prompt":"` + strings.Repeat("x", maxBodyBytes) + `"}`, status: 400, wantBody: "invalid JSON body\n"},
 		{name: "oversized trailing whitespace", body: `{"prompt":"hi"}` + strings.Repeat(" ", maxBodyBytes), status: 400, wantBody: "invalid JSON body\n"},
 		{name: "exact body limit", body: `{"prompt":"` + strings.Repeat("x", maxBodyBytes-len(`{"prompt":""}`)) + `"}`, status: 200},
-		{name: "wrong method", method: "GET", path: "/v1/route", status: 405, wantBody: "Method Not Allowed\n"},
+		{name: "wrong method", method: "GET", path: "/v1/pick", status: 405, wantBody: "Method Not Allowed\n"},
 		{name: "unknown path", method: "GET", path: "/missing", status: 404, wantBody: "404 page not found\n"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			method, path, auth := tc.method, tc.path, tc.authorization
 			if method == "" {
 				method = http.MethodPost
-				path = "/v1/route"
+				path = "/v1/pick"
 				auth = "Bearer test-key"
 			}
 			request, err := http.NewRequest(method, server.URL+path, strings.NewReader(tc.body))
@@ -65,13 +65,13 @@ func TestHTTPContract(t *testing.T) {
 			if response.StatusCode != tc.status {
 				t.Fatalf("HTTP %d, want %d: %s", response.StatusCode, tc.status, body)
 			}
-			if tc.status == 200 && path == "/v1/route" {
+			if tc.status == 200 && path == "/v1/pick" {
 				var result map[string]string
 				if err := json.Unmarshal(body, &result); err != nil {
 					t.Fatal(err)
 				}
 				if len(result) != 2 || result["tier"] != "only" || result["model"] != "test/only" || response.Header.Get("Content-Type") != "application/json" {
-					t.Fatalf("unexpected route response: %s", body)
+					t.Fatalf("unexpected pick response: %s", body)
 				}
 			} else if string(body) != tc.wantBody {
 				t.Fatalf("body %q, want %q", body, tc.wantBody)

@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/calvinvu/ez-model-router/config"
-	random "github.com/calvinvu/ez-model-router/utils"
+	"github.com/calvintvu/modelpicker/config"
+	random "github.com/calvintvu/modelpicker/utils"
 )
 
-type ModelRouteRequest struct {
+type ModelPickRequest struct {
 	Prompt string `json:"prompt"`
 }
 
-type ModelRouteResponse struct {
+type ModelPickResponse struct {
 	Tier  string `json:"tier"`
 	Model string `json:"model"`
 }
@@ -32,7 +32,7 @@ func defaultTemperature(choiceCount int) float64 {
 	}
 }
 
-func Route(r *http.Request, cfg *config.Config, prompt string, session *InferenceSession) (ModelRouteResponse, error) {
+func Pick(r *http.Request, cfg *config.Config, prompt string, session *InferenceSession) (ModelPickResponse, error) {
 	if len(cfg.Tiers) == 1 {
 		return pick(cfg.Tiers[0])
 	}
@@ -46,7 +46,7 @@ func Route(r *http.Request, cfg *config.Config, prompt string, session *Inferenc
 	if err != nil {
 		i := slices.IndexFunc(cfg.Tiers, func(t config.Tier) bool { return t.Name == cfg.DefaultTier })
 		if i < 0 {
-			return ModelRouteResponse{}, err
+			return ModelPickResponse{}, err
 		}
 		log.Printf("inference failed, using default tier %q: %v", cfg.DefaultTier, err)
 		return pick(cfg.Tiers[i])
@@ -61,10 +61,10 @@ func Route(r *http.Request, cfg *config.Config, prompt string, session *Inferenc
 	return pick(cfg.Tiers[best])
 }
 
-func pick(tier config.Tier) (ModelRouteResponse, error) {
+func pick(tier config.Tier) (ModelPickResponse, error) {
 	model, err := random.RandomElement(tier.Models)
 	if err != nil {
-		return ModelRouteResponse{}, err
+		return ModelPickResponse{}, err
 	}
-	return ModelRouteResponse{Tier: tier.Name, Model: model}, nil
+	return ModelPickResponse{Tier: tier.Name, Model: model}, nil
 }

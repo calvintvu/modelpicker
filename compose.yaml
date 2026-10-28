@@ -1,6 +1,6 @@
 # Set API_KEY in .env or the environment before running Compose.
-# First setup: docker compose run --build --rm model-download && docker compose up --build -d router
-# Later starts: docker compose up --build -d router
+# First setup: docker compose run --build --rm model-download && docker compose up --build -d picker
+# Later starts: docker compose up --build -d picker
 # Stop: docker compose down (the host model directory is preserved).
 # Builds use the local engine's CPU architecture; emulation can fail or be slow.
 services:
@@ -22,7 +22,7 @@ services:
         target: /models
         bind:
           create_host_path: true
-  router:
+  picker:
     build: .
     stop_grace_period: 35s
     ports:

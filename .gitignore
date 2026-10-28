@@ -1,4 +1,5 @@
 /lib/
 /ez-model-router-bin
+/modelpicker-bin
 .env
 inference/model/
