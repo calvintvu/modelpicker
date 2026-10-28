@@ -1,5 +1,7 @@
 # ez-model-router
 
+[![Go version](https://img.shields.io/github/go-mod/go-version/calvintvu/ez-model-router/main)](go.mod) [![CI status](https://github.com/calvintvu/ez-model-router/actions/workflows/ci.yml/badge.svg)](https://github.com/calvintvu/ez-model-router/actions/workflows/ci.yml) [![Source license](https://img.shields.io/github/license/calvintvu/ez-model-router)](LICENSE)
+
 A CPU-only router that classifies a prompt into a configured tier and returns a
 random model ID from that tier. It does not call providers or generate completions.
 
