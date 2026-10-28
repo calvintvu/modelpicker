@@ -1,0 +1,27 @@
+# Download once with `make model`, then set API_KEY in .env or the environment.
+# Start: docker compose up --build -d
+# Stop: docker compose down (the host model directory is preserved).
+# Builds use the local engine's CPU architecture; emulation can fail or be slow.
+services:
+  router:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      API_KEY: ${API_KEY:?Set a non-empty API_KEY in .env or the environment}
+      CONFIG_PATH: /app/config.yaml
+      MODEL_DIR: /models
+      LISTEN_ADDR: :8080
+    volumes:
+      - type: bind
+        source: ${MODEL_DIR:-./inference/model}
+        target: /models
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${CONFIG_PATH:-./config.yaml}
+        target: /app/config.yaml
+        read_only: true
+        bind:
+          create_host_path: false
