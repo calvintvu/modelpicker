@@ -5,3 +5,4 @@
 inference/model/
 /evals/runs/
 /evals/__pycache__/
+*.DS_Store
