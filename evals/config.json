@@ -1,0 +1,22 @@
+{
+  "classifier": {
+    "question": "What is the minimum model capability needed to answer this request correctly and follow its instructions?"
+  },
+  "tiers": [
+    {
+      "name": "tier_1",
+      "description": "Basic: straightforward questions, simple rewriting or extraction, and routine tasks with few constraints.",
+      "models": ["eval/tier_1"]
+    },
+    {
+      "name": "tier_2",
+      "description": "Standard: normal drafting, coding, explanation, or analysis with moderate reasoning and several constraints.",
+      "models": ["eval/tier_2"]
+    },
+    {
+      "name": "tier_3",
+      "description": "Advanced: difficult reasoning, complex debugging or algorithms, demanding research or synthesis, or interacting constraints that require careful reasoning.",
+      "models": ["eval/tier_3"]
+    }
+  ]
+}
