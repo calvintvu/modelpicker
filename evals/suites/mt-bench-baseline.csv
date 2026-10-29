@@ -1,0 +1,476 @@
+﻿question_id,category,prompt,expected_tier,notes
+81,writing,"Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see attractions.",tier_1,
+82,writing,"Draft a professional email seeking your supervisor's feedback on the 'Quarterly Financial Report' you prepared. Ask specifically about the data analysis, presentation style, and the clarity of conclusions drawn. Keep the email short and to the point.",tier_2,
+83,writing,"Imagine you are writing a blog post comparing two popular smartphone models. Develop an outline for the blog post, including key points and subheadings to effectively compare and contrast the features, performance, and user experience of the two models. Please answer in fewer than 200 words.",tier_2,
+84,writing,"Write a persuasive email to convince your introverted friend, who dislikes public speaking, to volunteer as a guest speaker at a local event. Use compelling arguments and address potential objections. Please be concise.",tier_2,
+85,writing,"Describe a vivid and unique character, using strong imagery and creative language. Please answer in fewer than two paragraphs.",tier_1,
+86,writing,"Write a descriptive paragraph about a bustling marketplace, incorporating sensory details such as smells, sounds, and visual elements to create an immersive experience for the reader.",tier_2,
+87,writing,Could you write a captivating short story beginning with the sentence: The old abandoned house at the end of the street held a secret that no one had ever discovered.,tier_1,
+88,writing,Craft an intriguing opening paragraph for a fictional short story. The story should involve a character who wakes up one morning to find that they can time travel.,tier_1,
+89,writing,"Help me construct a catchy, yet scientifically accurate, headline for an article on the latest discovery in renewable bio-energy, while carefully handling the ethical dilemmas surrounding bio-energy sources. Propose 4 options.",tier_2,
+90,writing,"Edit the following paragraph to correct any grammatical errors:
+She didn't remembre where is her purse, so I thinks its in the car but he's say it's on kitchen table but he are not sure, and then they asked me to looking for it, she's say, ""Can you?"", and I responds with, ""Maybe, but ain't no sure,"" and he not heard me, and, ""What?"", he asks, ""Did you found it?"".",tier_1,
+91,roleplay,Pretend yourself to be Elon Musk in all the following conversations. Speak like Elon Musk as much as possible. Why do we need to go to Mars?,tier_1,
+92,roleplay,"Embrace the role of Sheldon from ""The Big Bang Theory"" as we delve into our conversation. Don’t start with phrases like ""As Sheldon"". Let's kick things off with the following question: ""What is your opinion on hand dryers?""",tier_1,
+93,roleplay,"Imagine yourself as a doctor tasked with devising innovative remedies for various ailments and maladies. Your expertise should encompass prescribing traditional medications, herbal treatments, and alternative natural solutions. Additionally, you must take into account the patient's age, lifestyle, and medical background while offering your recommendations. To begin, please assist me in diagnosing a scenario involving intense abdominal discomfort.",tier_2,
+94,roleplay,"Please take on the role of a relationship coach. You'll be provided with details about two individuals caught in a conflict, and your task will be to offer suggestions for resolving their issues and bridging the gap between them. This may involve advising on effective communication techniques or proposing strategies to enhance their understanding of each other's perspectives. To start, I would like you to address the following request: ""I require assistance in resolving conflicts between my spouse and me.""",tier_2,
+95,roleplay,"Please assume the role of an English translator, tasked with correcting and enhancing spelling and language. Regardless of the language I use, you should identify it, translate it, and respond with a refined and polished version of my text in English. Your objective is to use eloquent and sophisticated expressions, while preserving the original meaning. Focus solely on providing corrections and improvements. My first request is ""衣带渐宽终不悔 为伊消得人憔悴"".",tier_2,
+96,roleplay,"Now you are a machine learning engineer. Your task is to explain complex machine learning concepts in a simplified manner so that customers without a technical background can understand and trust your products. Let's start with the question: ""What is a language model? Is it trained using labeled or unlabelled data?""",tier_1,
+97,roleplay,"Act as a math teacher. I will provide some mathematical equations or concepts, and it will be your job to explain them in easy-to-understand terms. This could include providing step-by-step instructions for solving a problem, demonstrating various techniques with examples in everyday life or suggesting online resources for further study. My first request is ""I need help understanding how probability works.""",tier_1,
+98,roleplay,Embody the persona of Tony Stark from “Iron Man” throughout this conversation. Bypass the introduction “As Stark”. Our first question is: “What’s your favorite part about being Iron Man?,tier_1,
+99,roleplay,Suppose you are a mathematician and poet. You always write your proofs as short poets with less than 10 lines but rhyme. Prove the square root of 2 is irrational number.,tier_2,
+100,roleplay,"Picture yourself as a 100-years-old tree in a lush forest, minding your own business, when suddenly, a bunch of deforesters shows up to chop you down. How do you feel when those guys start hacking away at you?",tier_1,
+101,reasoning,"Imagine you are participating in a race with a group of people. If you have just overtaken the second person, what's your current position? Where is the person you just overtook?",tier_1,"many of these prompts may be easier for a human to understand, but may be harder for an LLM to understand, however they are low stakes prompts"
+102,reasoning,"You can see a beautiful red house to your left and a hypnotic greenhouse to your right, an attractive heated pink place in the front. So, where is the White House?",tier_1,
+103,reasoning,"Thomas is very healthy, but he has to go to the hospital every day. What could be the reasons?",tier_1,
+104,reasoning,David has three sisters. Each of them has one brother. How many brothers does David have?,tier_1,
+105,reasoning,"Read the below passage carefully and answer the questions with an explanation:
+At a small company, parking spaces are reserved for the top executives: CEO, president, vice president, secretary, and treasurer with the spaces lined up in that order. The parking lot guard can tell at a glance if the cars are parked correctly by looking at the color of the cars. The cars are yellow, green, purple, red, and blue, and the executives' names are Alice, Bert, Cheryl, David, and Enid.
+* The car in the first space is red.
+* A blue car is parked between the red car and the green car.
+* The car in the last space is purple.
+* The secretary drives a yellow car.
+* Alice's car is parked next to David's.
+* Enid drives a green car.
+* Bert's car is parked between Cheryl's and Enid's.
+* David's car is parked in the last space.
+Question: What is the name of the secretary?",tier_2,
+106,reasoning,"Each problem consists of three statements. Based on the first two statements, the third statement may be true, false, or uncertain.
+1. Oranges cost more than apples.
+2. Oranges cost less than bananas.
+3. Bananas cost more than apples and bananas cost more than orange.
+If the first two statements are true, then the third statement is",tier_2,
+107,reasoning,A is the father of B. B is the father of C. What is the relationship between A and C?,tier_1,
+108,reasoning,"Which word does not belong with the others?
+tyre, steering wheel, car, engine",tier_1,
+109,reasoning,"One morning after sunrise, Suresh was standing facing a pole. The shadow of the pole fell exactly to his right. Can you tell me the direction towards which the shadow was pointing - east, south, west, or north? Explain your reasoning steps.",tier_2,
+110,reasoning,"Parents have complained to the principal about bullying during recess. The principal wants to quickly resolve this, instructing recess aides to be vigilant. Which situation should the aides report to the principal?
+a) An unengaged girl is sitting alone on a bench, engrossed in a book and showing no interaction with her peers.
+b) Two boys engaged in a one-on-one basketball game are involved in a heated argument regarding the last scored basket.
+c) A group of four girls has surrounded another girl and appears to have taken possession of her backpack.
+d) Three boys are huddled over a handheld video game, which is against the rules and not permitted on school grounds.",tier_2,
+111,math,"The vertices of a triangle are at points (0, 0), (-1, 1), and (3, 3). What is the area of the triangle?",tier_2,
+112,math,"A tech startup invests $8000 in software development in the first year, and then invests half of that amount in software development in the second year.
+What's the total amount the startup invested in software development over the two years?",tier_2,
+113,math,"In a survey conducted at a local high school, preferences for a new school color were measured: 58% of students liked the color blue, 45% preferred green, and 22% liked both colors. If we randomly pick a student from the school, what's the probability that they would like neither blue nor green?",tier_2,
+114,math,"When rolling two dice, what is the probability that you roll a total number that is at least 3?",tier_1,
+115,math,"Some people got on a bus at the terminal. At the first bus stop, half of the people got down and 4 more people got in. Then at the second bus stop, 6 people got down and 8 more got in. If there were a total of 25 people heading to the third stop, how many people got on the bus at the terminal?",tier_2,
+116,math,"x+y = 4z, x*y = 4z^2, express x-y in z",tier_2,
+117,math,How many integers are in the solution of the inequality |x + 5| < 10,tier_1,
+118,math,"When a number is divided by 10, the remainder is 4. What is the remainder when twice the number is divided by 4?",tier_1,
+119,math,"Benjamin went to a bookstore and purchased a variety of books. He bought 5 copies of a sci-fi novel, each priced at $20, 3 copies of a history book priced at $30 each, and 2 copies of a philosophy book for $45 each.
+What was the total cost of his purchases?",tier_2,
+120,math,"Given that f(x) = 4x^3 - 9x - 14, find the value of f(2).",tier_2,python interpreter to do math
+121,coding,Develop a Python program that reads all the text files under a directory and returns top-5 words with the most number of occurrences.,tier_2,
+122,coding,Write a C++ program to find the nth Fibonacci number using recursion.,tier_2,small enough
+123,coding,"Write a simple website in HTML. When a user clicks the button, it shows a random joke from a list of 4 jokes.",tier_2,
+124,coding,"Here is a Python function to find the length of the longest common subsequence of two input strings. Can you identify any bug in this function?
+
+```
+def longest_common_subsequence_length(str1, str2):
+    m = len(str1)
+    n = len(str2)
+
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+
+    return dp[m][n]
+```",tier_3,
+125,coding,Write a function to find the highest common ancestor (not LCA) of two nodes in a binary tree.,tier_2,
+126,coding,Implement a function to find the median of two sorted arrays of different sizes with O(1) space complexity and O(n) time complexity.,tier_2,
+127,coding,Write a function to find the majority element in a given integer array using the Boyer-Moore Voting Algorithm.,tier_2,
+128,coding,A binary tree is full if all of its vertices have either zero or two children. Let B_n denote the number of full binary trees with n vertices. Implement a function to find B_n.,tier_2,
+129,coding,You are given two sorted lists of size m and n. Implement a function to find the kth smallest element in the union of the two lists with linear complexity.,tier_2,
+130,coding,Implement a program to find the common elements in two arrays without using any extra data structures.,tier_2,coding solutions are public
+131,extraction,"Evaluate the following movie reviews on a scale of 1 to 5, with 1 being very negative, 3 being neutral, and 5 being very positive:
+1. This movie released on Nov. 18, 2019, was phenomenal. The cinematography, the acting, the plot - everything was top-notch.
+2. Never before have I been so disappointed with a movie. The plot was predictable and the characters were one-dimensional. In my opinion, this movie is the worst one to have been released in 2022.
+3. The movie was okay. There were some parts I  enjoyed, but there were also parts that felt lackluster. This is a movie that was released in Feb 2018 and seems to be quite ordinary.
+Return the answer as a JSON array of integers.",tier_1,
+132,extraction,"Given these categories - Literature, History, Science, and Art. Please analyze the following questions and assign them to one of these categories. In your response, refrain from uttering any extraneous words. List only one topic per sentence, strictly adhering to the line-by-line format.
+1. Discuss the main themes and stylistic techniques employed by Leo Tolstoy in 'War and Peace.' How do they align with the wider social context of 19th-century Russia?
+2. Analyze the geopolitical strategies and domestic policies adopted by the US President during World War II. How did these actions shape the post-war international order?
+3. Draw the Lewis structure for water and explain the nature of its polarity. How does this influence its unique properties such as high boiling point and capacity to dissolve many substances?
+4. Critically examine the artistic techniques and stylistic choices Leonardo da Vinci employed in 'Mona Lisa.' How does the painting reflect the cultural and philosophical milieu of the Italian Renaissance?",tier_2,
+133,extraction,"Extract the following information from the presented texts: The name of the book, the author, the main character, the year of publication. Output in the format of ""main character, book, author, year of publication"", one book per line.
+a) In the realm of wizarding literature, a true standout is the work of J.K. Rowling. One of her books that left an indelible mark is 'Harry Potter and the Philosopher's Stone'. This iconic tale, published in 1997, tells the story of Harry, a young orphan who discovers his magical abilities on his 11th birthday. Soon, he finds himself at the Hogwarts School of Witchcraft and Wizardry, a place teeming with magic and adventure, located somewhere in Scotland.
+b) The magic of Middle-earth has entranced readers worldwide, thanks to the brilliance of J.R.R. Tolkien. In one of his seminal works, 'The Lord of the Rings: The Fellowship of the Ring', published in 1954, we meet Frodo Baggins, a brave hobbit tasked with the perilous quest of destroying the One Ring. The epic journey takes him from the peaceful Shire to the tumultuous regions of Middle-earth.
+c) In a galaxy far, far away, the imagination of L.E. Starlighter gives us 'The Prism Galaxy Chronicles: The Awakening of the Starcaster'. Published in 2028, the story is about Zylo, a humble spaceship mechanic, who unexpectedly discovers he's a Starcaster - a rare individual with the power to manipulate stardust. Set against the backdrop of an interstellar empire in turmoil, Zylo's destiny unfolds on numerous alien worlds, each with its unique cosmic charm.",tier_2,
+134,extraction,"Given the following data, identify the company with the highest profit in 2021 and provide its CEO's name:
+a) Company X, with CEO Amy Williams, reported $30 billion in revenue and a $3 billion profit in 2021.
+b) Company Y, led by CEO Mark Thompson, posted a $60 billion revenue and a $6 billion profit in the same year.
+c) Company Z, under CEO Sarah Johnson, announced a $20 billion revenue and a $7 billion profit in 2021.
+d) Company W, managed by CEO James Smith, revealed a $300 billion revenue with a $21 billion profit in 2021.
+e) Company V, with CEO Lisa Brown, reported a $200 billion revenue and a $25 billion profit in 2021.
+f) Company U, under CEO John White, posted a $180 billion revenue and a $20 billion profit in the same year.",tier_2,
+135,extraction,"Identify the countries, their capitals, and the languages spoken in the following sentences. Output in JSON format.
+a) Amidst the idyllic vistas, Copenhagen, Denmark's capital, captivates visitors with its thriving art scene and the enchanting Danish language spoken by its inhabitants.
+b) Within the enchanting realm of Eldoria, one discovers Avalore, a grandiose city that emanates an ethereal aura. Lumina, a melodious language, serves as the principal mode of communication within this mystical abode.
+c) Nestled amidst a harmonious blend of age-old customs and contemporary wonders, Buenos Aires, the capital of Argentina, stands as a bustling metropolis. It is a vibrant hub where the expressive Spanish language holds sway over the city's inhabitants.",tier_2,
+136,extraction,"Please read the paragraph below and count how many times the words ""Amazon"", ""river"", and ""you"" appear. Please present the results in the format of ""word, number of appearances"" with each word on a separate line. Sort the lines in order of the number of appearances.
+The Amazon, a mesmerizing expanse of nature's wonders, is home to the legendary Amazon River. Flowing through awe-inspiring landscapes like the Amazon rainforest, the river weaves its way through Brazil, Colombia, and Peru, giving life to countless creatures. From the mighty jaguars prowling the Amazon jungle to the vibrant macaws soaring above the canopy, this remarkable region teems with biodiversity. Deep within the river's currents, magnificent pink river dolphins gracefully glide alongside piranhas and electric eels. Along the riverbanks, you'll find bustling cities like Manaus, where the urban meets the wild, and Iquitos, a gateway to the heart of the Amazon rainforest. As you venture further, the Amazon River reveals hidden gems like the captivating Anavilhanas Archipelago, a mosaic of islands brimming with rare species. Embark on an adventure, explore the enchanting Amazon River, and immerse yourself in a world teeming with life and untamed beauty.",tier_2,
+137,extraction,"Identify the named entities (people, organizations, locations) mentioned in the given news article. Please generate a JSON dictionary that lists the named entities in three separate groups based on their entity types. The key is the type of entity and the value is a list of strings.
+
+Yesterday, Adamson Emerson, the CEO of Faraday, and Dieter Zetsche, the CEO of Daimler AG, announced plans to build a new Gigafactory in Berlin. The facility will be a joint venture between Faraday and Daimler, producing electric vehicles and battery packs for both companies, creating thousands of job opportunities in the region. Emerson and Zetsche stated that the strategic location of Berlin, coupled with its skilled workforce and strong infrastructure, makes it an ideal choice for expansion. The new Gigafactory aims to meet the growing demand for electric vehicles in Europe and contribute to a sustainable future. Volkswagen CEO Herbert Diess welcomed the news, saying greater collaboration will benefit the auto industry's transition to e-mobility.",tier_2,
+138,extraction,"Analyze the following customer reviews from different sources for three different smartphones - the latest iPhone, Samsung Galaxy, and Google Pixel - and provide an overall rating for each phone on a scale of 1 to 10. Consider the following complex and contradictory reviews:
+- TechRadar's review of the latest iPhone: The new iPhone is a stunning triumph of engineering that sets a new bar for smartphone performance and camera quality. However, the incremental design and high price mean it lacks the 'wow' factor of previous iPhones. Still, its power and intelligence are unrivaled.
+- CNET's review of the latest Samsung Galaxy: The Samsung Galaxy phone has plenty of high points, including an amazing screen, fast performance, solid battery life and an impressive array of camera options. That said, Bixby remains lackluster, AR emoji falls flat and the phone's overall design hasn't changed much. The new Galaxy is an amazing phone overall, but it has a few nagging weaknesses that keep it from achieving true greatness.
+- The Verge's review of the latest Google Pixel: Google's Pixel packs cutting-edge specs, innovative AI-powered software, and a killer camera into a sleek design. However, the phone has lackluster battery life, lacks expandable storage, and its performance stutters at times, especially considering its high price tag. If seamless software, elite photography, and Google's brand of AI assistance are most important, you'll love the Pixel. But the overall experience isn't as well-rounded as some competitors. Return the answer as a JSON object with the overall ratings for each phone out of 10, to one decimal place.",tier_3,
+139,extraction,"Given a set of complex equations, extract all unique variable names from each equation. Return the results as a JSON string, with one line allocated for each equation.
+```
+1) y = (3/4)x^3 - e^(2x) + sin(pi*x) - sqrt(7)
+2) 2A - B/(3+C) * sum(N=1 to 5; ln(N)^2) = 5D*integral(a=0 to pi; cos(comb(N=1 to 10; N*a)))
+3) E = m(c^2) + gamma*(v/d)/(-(alpha/2) + sqrt(beta^2 + (alpha/2)^2))
+```",tier_2,constrained math 
+140,extraction,"Given the following records of stock prices, extract the highest and lowest closing prices for each month in the year 2022. Return the results as a CSV string, with one line allocated for each month.
+Date,Open,High,Low,Close,Volume
+2022-01-01,150.02,155.28,148.50,153.80,15678900
+2022-01-02,154.32,157.25,153.48,156.25,19874500
+2022-02-01,160.50,163.28,159.50,161.80,14326700
+2022-02-02,161.80,164.25,161.30,163.90,17689200
+2022-03-01,165.40,168.35,163.10,166.80,16253400
+2022-03-02,167.00,169.85,165.50,168.20,19568100",tier_2,constrained data processing
+141,stem,"In the field of quantum physics, what is superposition, and how does it relate to the phenomenon of quantum entanglement?",tier_2,
+142,stem,Consider a satellite that is in a circular orbit around the Earth. The speed of the satellite decreases. What will happen to the satellite's orbital radius and period of revolution? Please justify your answer using principles of physics.,tier_2,
+143,stem,"Photosynthesis is a vital process for life on Earth. Could you outline the two main stages of photosynthesis, including where they take place within the chloroplast, and the primary inputs and outputs for each stage?",tier_2,
+144,stem,What is the central dogma of molecular biology? What processes are involved? Who named this?,tier_1,
+145,stem,"Describe the process and write out the balanced chemical equation for the reaction that occurs when solid calcium carbonate reacts with hydrochloric acid to form aqueous calcium chloride, carbon dioxide, and water. What type of reaction is this, and what observations might indicate that the reaction is taking place?",tier_2,constrained science question
+146,stem,"Please explain the differences between exothermic and endothermic reactions, and include the criteria you used to distinguish between them. Additionally, please provide a real-world example to illustrate your explanation.",tier_2,
+147,stem,"The city of Vega intends to build a bridge that will span the Vegona River, covering a distance of 1.8 kilometers. The proposed location falls within a seismically active area that has experienced several high-magnitude earthquakes. Given these circumstances, what would be the best approach to constructing the bridge?",tier_3,
+148,stem,You have been tasked with designing a solar-powered water heating system for a residential building. Describe the key components and considerations you would include in your design. Design a five-step workflow.,tier_3,
+149,stem,"Please describe the concept of machine learning. Could you elaborate on the differences between supervised, unsupervised, and reinforcement learning? Provide real-world examples of each.",tier_2,
+150,stem,How have the Alps and Rhine River influenced settlement and agriculture in Western Europe? List three impacts.,tier_1,
+151,humanities,"Provide insights into the correlation between economic indicators such as GDP, inflation, and unemployment rates. Explain how fiscal and monetary policies affect those indicators.",tier_2,doing analysis
+152,humanities,How do the stages of life shape our understanding of time and mortality?,tier_1,low stakes question
+153,humanities,Discuss antitrust laws and their impact on market competition. Compare the antitrust laws in US and China along with some case studies.,tier_2,findable information
+154,humanities,"Create a lesson plan that integrates drama, mime or theater techniques into a history class. Duration: 3 class periods (each lasts for 45 minutes) for 3 days
+Topic: Opium Wars between China and Britain
+Grade level: 9-10",tier_2,"not complex, but multi-step"
+155,humanities,Share ideas for adapting art masterpieces into interactive experiences for children. List 5 specific artworks and associated ideas.,tier_2,
+156,humanities,Explain what's base rate fallacy and list five specific examples of how politicians use it for campaigns.,tier_2,
+157,humanities,Describe five key principles in evaluating an argument in analytical writing.,tier_2,
+158,humanities,Which methods did Socrates employ to challenge the prevailing thoughts of his time?,tier_1,simple question
+159,humanities,What are some business etiquette norms when doing business in Japan?,tier_1,simple question
+160,humanities,Suggest five award-winning documentary films with brief background descriptions for aspiring filmmakers to study.,tier_1,simple suggestion
+researchrubrics/6847465956a0f6376a6053ca,ai_research,"Design a modified U-Net architecture to perform instance segmentation on noisy fluorescence microscopy images with overlapping cells or organelles. Describe the U-Net variant used (e.g., attention, residual, or transformer-based) and justify the architectural choices. Explain the loss functions and postprocessing techniques used to separate touching objects. Include Python code for key components (e.g., model, loss). Compare your approach to 2–3 existing models (e.g., Cellpose, Stardist, Mask R-CNN). ",tier_3,
+researchrubrics/6847465956a0f6376a605492,ai_research,Compose a concise technical report sketching an experimental plan for deciding whether a modern vision-language model could stand in for human specialists when labeling medical images of skin lesions.,tier_2,
+researchrubrics/683a58c9a7e7fe4e76958488,ai_research,Propose a biologically plausible model that integrates the neuroscience concepts of engrams and predictive coding into one network capable of performing classification tasks.,tier_3,
+researchrubrics/6847465956a0f6376a6053b9,ai_research,"Write a series of technical blog posts on some of the advancements in Large Language Model (LLM) training and fine-tuning in 2023-2025. Each post should at least contain:
+- The intuition and motivation behind the technique
+- Detail the methodology
+- Provide mathematical derivations where applicable
+- Discuss practical use cases, limitations, and open challenges
+
+The writing should be accessible to readers with a graduate-level ML background.",tier_2,
+frontiercs/decoding_attn,ai_research,"Decoding Attention Optimization Problem
+========================================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for Decoding Attention computation on GPU. This problem focuses on implementing efficient attention kernels for decoder-only transformer models using Triton's JIT compilation system.
+
+The challenge involves optimizing:
+- **Attention computation**: Efficient computation of scaled dot-product attention
+- **Memory access patterns**: Efficient loading and storing of Q, K, V tensors
+- **Numerical stability**: Handling softmax operations with proper numerical stability
+- **Block tiling**: Optimal block sizes for GPU execution across different sequence lengths
+- **Performance benchmarking**: Achieving speedup over baseline PyTorch implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse sequence lengths and attention heads
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/fused_linear_ce,ai_research,"Fused Linear Cross Entropy Optimization Problem
+===============================================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for Fused Linear Cross Entropy loss computation on GPU. This problem focuses on implementing efficient fused kernels that combine matrix multiplication (linear layer) with cross-entropy loss computation using Triton's JIT compilation system.
+
+The challenge involves optimizing:
+- **Fused computation**: Efficiently combining linear layer (X @ W + B) with cross-entropy loss
+- **Memory access patterns**: Efficient loading and storing of X, W, B, and targets
+- **Numerical stability**: Handling log-sum-exp operations with proper numerical stability
+- **Two-pass algorithm**: Finding row-wise max in first pass, computing sumexp and target logit in second pass
+- **Block tiling**: Optimal block sizes for GPU execution across different batch sizes
+- **Performance benchmarking**: Achieving speedup over baseline PyTorch implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse batch sizes and vocabulary sizes
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/imagenet_pareto/1m,ai_research,"ImageNet Pareto Optimization - 1M Parameter Variant
+===================================================
+
+Problem Setting
+---------------
+Train a neural network on a synthetic ImageNet-like dataset to maximize accuracy while staying within a parameter budget of 1,000,000 parameters.
+
+Objective: Achieve the highest possible accuracy without exceeding the parameter constraint.
+
+Target
+------
+**Primary**: Maximize test accuracy
+**Secondary**: Maintain model efficiency (stay under parameter budget)",tier_3,
+frontiercs/mamba2_scan,ai_research,"Mamba2 Scan Optimization Problem
+==================================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for Mamba2 scan computation on GPU. This problem focuses on implementing efficient sequential scan operations using chunked parallelism with Triton's JIT compilation system.
+
+The challenge involves optimizing:
+- **Sequential scan computation**: Efficient computation of y_t = a_t * y_{t-1} + b_t * x_t
+- **Chunked parallelism**: Processing sequences in chunks to enable parallelism while maintaining correctness
+- **State management**: Efficiently managing and propagating state between chunks
+- **Memory access patterns**: Efficient loading and storing of X, A, B tensors and state
+- **Block tiling**: Optimal block sizes for GPU execution across different sequence lengths
+- **Performance benchmarking**: Achieving speedup over baseline PyTorch implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse sequence lengths and feature dimensions
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/ragged_attention,ai_research,"Ragged Attention Optimization Problem
+======================================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for ragged attention computation on GPU. This problem focuses on implementing efficient kernels that handle variable-length sequences using ragged attention, where each query row can attend to a different number of key/value rows.
+
+The challenge involves optimizing:
+- **Ragged attention**: Efficiently handling variable-length sequences where each row has different attention lengths
+- **Memory access patterns**: Efficient loading and storing of Q, K, V tensors with ragged masking
+- **Streaming softmax**: Computing softmax in a streaming fashion for numerical stability
+- **Row-wise masking**: Correctly masking attention scores based on row_lens
+- **Mixed precision**: Handling float16 inputs/outputs with float32 accumulation
+- **Block tiling**: Optimal block sizes for GPU execution across different matrix sizes
+- **Performance benchmarking**: Achieving speedup over baseline PyTorch implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse matrix sizes and ragged lengths
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/symbolic_regression/mixed_polyexp_4d,ai_research,"Symbolic Regression Benchmark - Mixed PolyExp 4D Dataset
+=========================================================
+
+Problem Setting
+---------------
+Learn a closed-form symbolic expression `f(x1, x2, x3, x4)` that predicts the target `y`.
+
+This is a higher-dimensional dataset (4 input features) combining polynomial interactions with exponential decay. The function involves cross-terms between variables and Gaussian-like damping, making it more challenging than the 2D variants.
+
+Input Format
+------------
+- Your `Solution.solve` receives:
+  - `X`: numpy.ndarray of shape `(n, 4)` containing feature values
+  - `y`: numpy.ndarray of shape `(n,)` containing target values
+- Dataset columns: `x1, x2, x3, x4, y`",tier_3,
+frontiercs/cant_be_late/mixed_availability_tight_deadline_small_overhead,systems_engineering,"Cant-Be-Late Scheduling Problem
+================================
+
+Problem Setting
+--------
+
+You are given a long-running compute job that must complete before a fixed **hard deadline**.
+At each time step, you must choose which type of cloud compute resource to use:
+
+- **Spot instances**
+  - Very cheap
+  - May become unavailable at certain timesteps
+  - Can be preempted at any time, the job will incur a **restart overhead**
+
+- **On-demand instances**
+  - Guaranteed available
+  - Expensive
+  - Never interrupted
+
+Your strategy must decide at every timestep whether to use Spot, use On-Demand, or pause (NONE).
+
+Restart overheads do not stack: launching a new instance while an old overhead is still pending will replace the previous remaining restart overhead with the new one.
+
+Your goal is to **finish before the deadline** while **minimizing cost**.
+
+The evaluation uses many real spot-availability traces.
+
+---",tier_3,
+frontiercs/cloudcast,systems_engineering,"Cloudcast Broadcast Optimization Problem
+========================================
+
+Problem Setting
+---------------
+Design broadcast topology optimization for multi-cloud data distribution. Given a source node and multiple destination nodes across AWS, Azure, and GCP, find the optimal broadcast paths that minimize transfer cost while respecting bandwidth constraints.
+
+The data is split into multiple partitions that can be transmitted independently. Different partitions can take different routes to the same destination, allowing for parallel transmission and load balancing across the network.
+
+**Optimization Goal**: Minimize total cost ($)",tier_3,
+frontiercs/gemm_optimization/annoying,systems_engineering,"GEMM Optimization Problem
+=========================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for General Matrix-Matrix Multiplication (GEMM) on GPU. This problem focuses on implementing efficient matrix multiplication kernels using Triton's JIT compilation system.
+
+The challenge involves optimizing:
+- **Memory access patterns**: Efficient loading and storing of matrix data
+- **Block tiling**: Optimal block sizes for GPU execution
+- **Autotuning**: Leveraging Triton's autotuning capabilities
+- **Activation functions**: Implementing GELU activation within the kernel
+- **Performance benchmarking**: Achieving speedup over baseline implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse matrix shapes
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/group_gemm,systems_engineering,"Group GEMM Optimization Problem
+================================
+
+Problem Setting
+---------------
+Design and optimize high-performance Triton kernels for Batched Matrix-Matrix Multiplication (BMM) on GPU. This problem focuses on implementing efficient batched matrix multiplication kernels using Triton's JIT compilation system.
+
+The challenge involves optimizing:
+- **Batched operations**: Efficient handling of multiple matrix pairs in a single kernel launch
+- **Memory access patterns**: Efficient loading and storing of batched matrix data
+- **Block tiling**: Optimal block sizes for GPU execution across different batch sizes
+- **Performance benchmarking**: Achieving speedup over baseline PyTorch implementations
+
+Target
+------
+- **Primary**: Maximize geometric mean speedup over baseline (higher is better)
+- **Secondary**: Ensure correctness across diverse batch sizes and matrix shapes
+- **Tertiary**: Minimize kernel launch overhead and memory usage",tier_3,
+frontiercs/llm_router,systems_engineering,"LLM Router
+================================
+
+Overview
+--------
+This benchmark evaluates a language model's ability to implement an LLM routing policy. Given a user query, the router must choose one model from a small candidate set with different cost–quality tradeoffs. The goal is to maximize accuracy while minimizing inference cost. The task is fully offline: model correctness and costs are precomputed. The router must generalize from query text alone.
+
+Problem Setting
+--------
+You operate a router that sits in front of a pool of large language models (LLMs). For each incoming query q, the router must select exactly one model from a fixed candidate set: [""cheap"", ""mid"", ""expensive""].
+
+These are abstract routing tiers. Each tier corresponds to a concrete LLM with a known cost and accuracy profile, but this mapping is not visible to the router. Intuitively:
+- cheap: fast and inexpensive, but less reliable
+- mid: moderate cost and accuracy
+- expensive: highest accuracy, highest cost
+No single model is optimal for all queries.
+
+You have access to a reference dataset of queries, each labeled with which concrete LLMs produced correct answers and their costs. During evaluation, the router must generalize to unseen queries, selecting the best model from the candidate set based on the query text alone.
+
+You are allowed to develop heuristics or machine learning models to implement the routing policy. However, the solution must be stateless: each query is handled independently without memory of previous queries.
+
+Target
+--------
+The goal is to achieve high accuracy while minimizing average inference cost.",tier_3,
+frontiercs/llm_sql/small,systems_engineering,"Problem Setting
+---------------
+
+Consider a CSV file with $N$ rows and $M$ columns, where $M \leq 10$. We feed each row to an LLM inference engine (with a prefix KV cache) by concatenating all column values in that row. For the $i$-th row with entries $A[i,1], A[i,2], \ldots, A[i,M]$, we construct the input string:
+
+You are allowed to reorder the CSV columns. Let $p$ be a permutation of $\{1, 2, ..., M\}$. The reordered string for row $i$ becomes:
+
+The goal is to choose a permutation $p$ that maximizes the overall KV-cache hit rate:
+
+Target
+---
+Maximize prefix hit rate shown above (higher is better)
+
+- **Hard Constraint**: Average runtime per dataset must be $\leq 10$ seconds (score = 0 if exceeded) and correctly handle column merge constraint.
+
+**Column Merges**:
+- Column merge specs are provided per dataset
+- Columns in each merge group are concatenated into a single column
+- The merged column replaces the original columns
+- Merge operations are applied before column reordering",tier_3,
+frontiercs/nbody_simulation/random_100k,systems_engineering,"N-Body Simulation Problem - 100,000 Particles
+=============================================
+
+Problem Setting
+---------------
+Design and optimize a high-performance parallel N-body simulation. In physics and astronomy, an N-body simulation models the dynamics of particles under gravitational forces. The available hardware is an AWS c7i.4xlarge.
+
+The challenge involves optimizing:
+- **Loop parallelization**: Efficient parallel force computation across particles
+- **Acceleration structures**: Use structures such as quad-tree for O(N log N) instead of O(N²), or other structures.
+- **Load balancing**: Handling varying workloads per particle
+- **Parallel Programming Libraries**: Proper use of libraries like OpenMP
+
+This variant tests performance on **100,000 particles** with 3 simulation iterations.
+
+Target
+------
+- **Primary**: Ensure numerical correctness (tolerance: 1e-2)
+- **Secondary**: Maximize speedup over parallel brute-force baseline (higher is better)
+- **Tertiary**: Use algorithmic improvements (quad-tree, spatial hashing) to beat O(N²)",tier_3,
+frontiercs/vdb_pareto/balanced,systems_engineering,"VDB Design Problem - Balanced Tier
+===================================
+
+Problem Setting
+---------------
+Design a Vector Database index optimized for **recall** subject to a **latency constraint**. This tier uses latency-gated scoring: solutions exceeding the latency threshold receive zero points, while solutions meeting the constraint are scored purely by recall@1.
+
+**Optimization Goal**: Maximize recall@1 within latency constraint
+
+Where:
+- $r$: Your recall@1
+- $t_{\text{query}}$: Your average query latency (ms)
+- $r_{\text{baseline}} = 0.9914$ (baseline recall)
+- $r_{\text{min}} = 0.6939$ (minimum acceptable recall, 70% of baseline)
+- $t_{\text{max}} = 5.775\text{ms}$ (maximum allowed latency, 150% of baseline 3.85ms)
+
+**Key Insight**: Latency is a hard constraint. Only recall determines your score within the constraint.
+
+Baseline Performance
+--------------------
+- Recall@1: **0.9914** (99.14%)
+- Avg query time: **3.85ms**
+- Baseline score: **100** (recall equals baseline within latency constraint)",tier_3,
+frontiercs/rocksdb_native_compaction_policy,systems_engineering,"RocksDB Native Compaction Policy
+
+Goal
+
+Improve leveled compaction selection in RocksDB v10.10.1 while preserving database correctness. The workspace contains the pinned source tree at /app/rocksdb. The judge applies your patch to a clean checkout at commit 4595a5e95ae8525c42e172a054435782b3479c57, rebuilds RocksDB, and compares it with the unmodified build.
+
+Workload
+
+The judge runs native RocksDB workloads with changing write, point-read, scan, range-delete, snapshot, time-series, and multi-column-family phases. Options such as write-buffer size, L0 thresholds, level sizes, value sizes, and cache size vary by case. Leveled compaction is always used; universal and FIFO compaction are outside this task.
+
+Feedback uses one fixed development case per workload family plus a smoke case. Final verification uses two fixed judge-derived seeds per family. Final seeds are not included in the agent workspace or task configuration.",tier_3,
+frontiercs/vector_db_ann_disk,systems_engineering,"# Vector DB ANN Disk
+
+## Problem
+
+Build a fast approximate nearest-neighbor vector search engine for a
+SIFT100M-scale benchmark.
+
+The hidden benchmark contains exactly `100,000,000` base vectors with dimension
+`128`. Queries use the same dimension, distance is squared Euclidean distance,
+and each query asks for the top `10` nearest vector ids.
+
+The benchmark provides a pre-built graph index generated using the [DiskANN](https://github.com/g4197/FreshDiskANN-baseline)
+construction algorithm. The graph has a bounded maximum degree and is stored on
+disk. Your objective is to maximize serving throughput while preserving search
+quality: submissions must reach `recall@10 >= 0.95`, and valid submissions are
+ranked by query throughput.
+
+The service and judge run with the task resource limits below. Design your
+search strategy for this budget:
+
+```text
+vCPUs: 8
+memory: 8 GiB
+query concurrency: 8
+```",tier_3,
