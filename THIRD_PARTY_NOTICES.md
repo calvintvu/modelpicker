@@ -98,3 +98,18 @@ System libraries supplied by the user's OS are separate from the native archives
 
 After dependency, model, compiler, or packaging changes, update this inventory and the notices before publishing artifacts.
 Preserve upstream license text and copyright notices when updating the bundle.
+
+## Evaluation data
+
+`evals/suites/creative-writing.jsonl` contains 42 unchanged English prompts selected
+from WritingBench, Yuning Wu and colleagues (2025), under Apache-2.0.
+The [evaluation attribution](evals/README.md#attribution) identifies the pinned source,
+selection changes, and license copy. Dataset terms are separate from the MIT application license.
+
+`evals/suites/mt-bench-baseline.csv` contains 80 unchanged first-turn MT-Bench prompts
+and 20 selected ResearchRubrics requests and FrontierCS task excerpts. The
+[evaluation attribution](evals/README.md#attribution) and
+[source manifest](evals/suites/advanced-source.json) record the sources, revisions,
+selection changes, and declared terms. Original MIT notices are retained under
+[third_party/researchrubrics](third_party/researchrubrics/LICENSE) and
+[third_party/frontiercs](third_party/frontiercs/LICENSE), alongside the existing Apache-2.0 copy.

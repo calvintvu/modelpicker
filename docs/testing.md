@@ -40,10 +40,31 @@ The check waits up to 180s for health, requires unauthenticated 401 and authenti
 200 JSON, and checks tier/model membership. It does not score selection quality.
 For containers, use the same fixture/key with the [quickstart](../README.md#quickstart).
 
+## Selection runner
+
+Requires Python 3.11+ and local loopback access:
+
+```sh
+python3 -m unittest discover -s evals -p 'test_*.py' -v
+```
+
+These tests start real temporary HTTP subprocesses and replace only the native build step.
+They cover scoring, snapshots, response validation, truncated responses, startup failure, startup timeout, SIGTERM cleanup, and surviving child processes.
+They do not require native libraries or model weights.
+
+For an actual classifier evaluation with managed startup and shutdown, run:
+
+```sh
+python3 evals/run.py
+```
+
+The [evaluation guide](../evals/README.md) explains the native prerequisites, isolated configuration, outputs, and exit codes.
+
 ## CI
 
 [Workflow](../.github/workflows/ci.yml): native Linux AMD64/ARM64 and macOS ARM64
 format/vet/test/build jobs, plus Linux AMD64 service/downloader image builds.
+Native jobs also run the Python lifecycle tests without model downloads.
 Toolchains, native archives, and action revisions are pinned. No images are published.
 
 Manual dispatch with `real_model` enabled adds native smoke and Compose lifecycle checks.
