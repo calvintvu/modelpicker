@@ -169,7 +169,20 @@ Other OS versions are not verified.
 
 [Startup observations](docs/setup-observations.md) describe one measured machine.
 Concurrency safety, overload handling, throughput, and load testing are deferred.
-Selection-quality evaluations are also pending. No production capacity is claimed.
+Selection-policy evaluations use [labeled prompt suites](evals/README.md). No production capacity is claimed.
+
+## Selection evaluation
+
+With Python 3.11+ and the native build tools installed, run:
+
+```sh
+python3 evals/run.py
+```
+
+The runner builds and owns a private native server, manages its configuration,
+scores the labeled prompts, saves results under `evals/runs/`, and stops the server.
+No manual server or API key is required. See the [evaluation guide](evals/README.md)
+for prerequisites, cache behavior, outputs, and overrides.
 
 ## Model and licenses
 
