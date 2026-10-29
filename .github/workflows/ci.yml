@@ -77,10 +77,11 @@ jobs:
       - name: Build service
         run: make build
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        if: github.event_name == 'workflow_dispatch' && inputs.real_model
         with:
           # 3.13.18 has no macOS ARM64 artifact in actions/python-versions.
           python-version: 3.13.17
+      - name: Eval runner lifecycle tests
+        run: python -m unittest discover -s evals -p 'test_*.py' -v
       - name: Download pinned model
         if: github.event_name == 'workflow_dispatch' && inputs.real_model
         env:

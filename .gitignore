@@ -3,3 +3,5 @@
 /modelpicker-bin
 .env
 inference/model/
+/evals/runs/
+/evals/__pycache__/
