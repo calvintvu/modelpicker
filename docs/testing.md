@@ -64,7 +64,7 @@ The [evaluation guide](../evals/README.md) explains the native prerequisites, is
 
 [Workflow](../.github/workflows/ci.yml): native Linux AMD64/ARM64 and macOS ARM64
 format/vet/test/build jobs, plus Linux AMD64 service/downloader image builds.
-Native jobs also run the Python lifecycle tests without model downloads.
+Selection evaluations and their Python lifecycle tests run locally, outside CI.
 Toolchains, native archives, and action revisions are pinned. No images are published.
 
 Manual dispatch with `real_model` enabled adds native smoke and Compose lifecycle checks.
