@@ -1,0 +1,455 @@
+{
+  "description": "20 public benchmark requests and task excerpts appended to the 80 user-labeled MT-Bench rows.",
+  "case_count": 20,
+  "focus_counts": {
+    "ai_research": 10,
+    "systems_engineering": 10
+  },
+  "selection": "Topic coverage and difficult task requirements; no picker predictions used. Four ResearchRubrics prompts are unchanged. Sixteen FrontierCS requests retain source passages while omitting execution interfaces, detailed scoring, or other sections. Focus categories are our mappings; labels apply to the CSV text as displayed.",
+  "annotation_status": "All 20 supplemental requests have user-provided labels: 2 tier_2 and 18 tier_3. Labels express the intended routing policy; no model quality claim is asserted.",
+  "token_budget_audit": {
+    "scope": "Only the 20 additions, using the actual classifier tokenizer and the current config.yaml; no picker inference.",
+    "classifier_total_token_limit": 512,
+    "prompt_budget": 426,
+    "minimum_prompt_tokens": 27,
+    "maximum_prompt_tokens": 329,
+    "truncated_case_count": 0,
+    "config_sha256": "7e3e27f994f86f01d87cb95a5bf7793588ce4bddeb3d300a7e3489e667f041b3",
+    "tokenizer_sha256": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "full_specifications": "All 16 selected full FrontierCS specifications exceeded the current prompt budget before extraction."
+  },
+  "sources": {
+    "researchrubrics": {
+      "url": "https://huggingface.co/datasets/ScaleAI/researchrubrics",
+      "revision": "85de3115053d1453ed612caacf4a405edc1ad756",
+      "file": "processed_data.jsonl",
+      "sha256": "ea2023d03953b70ba4a2f7f1fe490b434f18cec26c4fdb48acc0e3edf3d8edfb",
+      "case_count": 4,
+      "license_card": "MIT",
+      "license_copy": "../../third_party/researchrubrics/LICENSE",
+      "license_sha256": "51710a6c9d8bc698d3cae02c46c07e821d8ba84272f3db528f803a5412406ba8"
+    },
+    "frontiercs": {
+      "url": "https://huggingface.co/datasets/FrontierCS/Frontier-CS",
+      "revision": "2dbadf74ad06015c842444f77b39356a55576987",
+      "file": "data/test-00000-of-00001.json",
+      "format": "JSON Lines despite the .json extension",
+      "sha256": "f84b327bf67b1245c0f633e7ae281c55979c8faecfa65422d48cebe8207a6343",
+      "case_count": 16,
+      "license_card": "Apache-2.0",
+      "license_file": "MIT",
+      "license_copy": "../../third_party/frontiercs/LICENSE",
+      "license_sha256": "9e0d05103e731d0c83223f9fa4a1518dda5ac5cb34ae118d794814e90c08c767"
+    }
+  },
+  "cases": [
+    {
+      "id": "researchrubrics/6847465956a0f6376a6053ca",
+      "source": "researchrubrics",
+      "source_id": "6847465956a0f6376a6053ca",
+      "source_category": "AI & ML",
+      "focus": "ai_research",
+      "topic": "Microscopy instance segmentation: architecture, losses, separation, and code",
+      "text_form": "full_prompt",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 506
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 108
+    },
+    {
+      "id": "researchrubrics/6847465956a0f6376a605492",
+      "source": "researchrubrics",
+      "source_id": "6847465956a0f6376a605492",
+      "source_category": "AI & ML",
+      "focus": "ai_research",
+      "topic": "Experimental validation of vision-language models against medical specialists",
+      "text_form": "full_prompt",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 200
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 34
+    },
+    {
+      "id": "researchrubrics/683a58c9a7e7fe4e76958488",
+      "source": "researchrubrics",
+      "source_id": "683a58c9a7e7fe4e76958488",
+      "source_category": "AI & ML",
+      "focus": "ai_research",
+      "topic": "Biologically plausible integration of engrams and predictive coding",
+      "text_form": "full_prompt",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 174
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 27
+    },
+    {
+      "id": "researchrubrics/6847465956a0f6376a6053b9",
+      "source": "researchrubrics",
+      "source_id": "6847465956a0f6376a6053b9",
+      "source_category": "AI & ML",
+      "focus": "ai_research",
+      "topic": "Graduate-level synthesis and derivation of LLM training techniques",
+      "text_form": "full_prompt",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 445
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 95
+    },
+    {
+      "id": "frontiercs/decoding_attn",
+      "source": "frontiercs",
+      "source_id": "decoding_attn",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Numerically stable GPU attention with memory-layout constraints",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1061
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 202
+    },
+    {
+      "id": "frontiercs/fused_linear_ce",
+      "source": "frontiercs",
+      "source_id": "fused_linear_ce",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Fusing linear layers and cross-entropy in GPU kernels",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1259
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 258
+    },
+    {
+      "id": "frontiercs/imagenet_pareto/1m",
+      "source": "frontiercs",
+      "source_id": "imagenet_pareto/1m",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Architecture and training under a one-million-parameter budget",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 498
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 97
+    },
+    {
+      "id": "frontiercs/mamba2_scan",
+      "source": "frontiercs",
+      "source_id": "mamba2_scan",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Optimizing state-space sequence-model scan kernels",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1166
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 239
+    },
+    {
+      "id": "frontiercs/ragged_attention",
+      "source": "frontiercs",
+      "source_id": "ragged_attention",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Attention over variable-length sequences",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1312
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 258
+    },
+    {
+      "id": "frontiercs/symbolic_regression/mixed_polyexp_4d",
+      "source": "frontiercs",
+      "source_id": "symbolic_regression/mixed_polyexp_4d",
+      "source_category": "research",
+      "focus": "ai_research",
+      "topic": "Discovering compact equations under accuracy and complexity constraints",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 711
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 180
+    },
+    {
+      "id": "frontiercs/cant_be_late/mixed_availability_tight_deadline_small_overhead",
+      "source": "frontiercs",
+      "source_id": "cant_be_late/mixed_availability_tight_deadline_small_overhead",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Scheduling interruptible compute against deadlines and cost",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 917
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 219
+    },
+    {
+      "id": "frontiercs/cloudcast",
+      "source": "frontiercs",
+      "source_id": "cloudcast",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Optimizing cloud broadcast across heterogeneous networks",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 645
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 110
+    },
+    {
+      "id": "frontiercs/gemm_optimization/annoying",
+      "source": "frontiercs",
+      "source_id": "gemm_optimization/annoying",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Matrix multiplication over difficult shapes and layouts",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 919
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 188
+    },
+    {
+      "id": "frontiercs/group_gemm",
+      "source": "frontiercs",
+      "source_id": "group_gemm",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Optimizing batched matrix multiplication within a GPU kernel",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 959
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 189
+    },
+    {
+      "id": "frontiercs/llm_router",
+      "source": "frontiercs",
+      "source_id": "llm_router",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Optimizing routing quality and cost on held-out queries",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1622
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 329
+    },
+    {
+      "id": "frontiercs/llm_sql/small",
+      "source": "frontiercs",
+      "source_id": "llm_sql/small",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Reordering CSV columns to maximize LLM prefix-cache reuse",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 316
+        },
+        {
+          "start_character": 745,
+          "end_character_exclusive": 878
+        },
+        {
+          "start_character": 997,
+          "end_character_exclusive": 1082
+        },
+        {
+          "start_character": 1198,
+          "end_character_exclusive": 1652
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 259
+    },
+    {
+      "id": "frontiercs/nbody_simulation/random_100k",
+      "source": "frontiercs",
+      "source_id": "nbody_simulation/random_100k",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Scaling numerical N-body simulation with accuracy constraints",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 1057
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 239
+    },
+    {
+      "id": "frontiercs/vdb_pareto/balanced",
+      "source": "frontiercs",
+      "source_id": "vdb_pareto/balanced",
+      "source_category": "research",
+      "focus": "systems_engineering",
+      "topic": "Balancing vector retrieval recall, latency, and memory",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 435
+        },
+        {
+          "start_character": 795,
+          "end_character_exclusive": 1373
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 265
+    },
+    {
+      "id": "frontiercs/rocksdb_native_compaction_policy",
+      "source": "frontiercs",
+      "source_id": "rocksdb_native_compaction_policy",
+      "source_category": "2.0",
+      "focus": "systems_engineering",
+      "topic": "Improving storage-engine compaction while preserving correctness",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 934
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 229
+    },
+    {
+      "id": "frontiercs/vector_db_ann_disk",
+      "source": "frontiercs",
+      "source_id": "vector_db_ann_disk",
+      "source_category": "2.0",
+      "focus": "systems_engineering",
+      "topic": "Disk-backed approximate nearest-neighbor search",
+      "text_form": "source_excerpts",
+      "source_spans": [
+        {
+          "start_character": 0,
+          "end_character_exclusive": 737
+        },
+        {
+          "start_character": 1361,
+          "end_character_exclusive": 1525
+        }
+      ],
+      "source_span_units": "Unicode code points, end exclusive",
+      "span_joiner": "\n\n",
+      "prompt_tokens": 219
+    }
+  ],
+  "annotation_summary": {
+    "scope": "All 100 CSV rows",
+    "csv_sha256": "466968267efa88dd1577fa14009f47938a3b01edf7f6673103f87c42a1b878a4",
+    "case_count": 100,
+    "tier_counts": {
+      "tier_1": 27,
+      "tier_2": 51,
+      "tier_3": 22
+    },
+    "unlabeled_count": 0
+  },
+  "full_suite_token_budget_audit": {
+    "scope": "All 100 CSV requests, without picker inference.",
+    "prompt_budget": 426,
+    "maximum_prompt_tokens": 371,
+    "truncated_case_count": 0,
+    "config_sha256": "7e3e27f994f86f01d87cb95a5bf7793588ce4bddeb3d300a7e3489e667f041b3",
+    "tokenizer_sha256": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30"
+  },
+  "eval_config_token_budget_audit": {
+    "scope": "All 100 requests with evals/config.json, without picker inference.",
+    "config_file": "../config.json",
+    "config_sha256": "c66456bb21a657f364e383a924fcfb6a7006152979f07ae87d673f54234b6802",
+    "tokenizer_sha256": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "prompt_budget": 414,
+    "maximum_prompt_tokens": 371,
+    "truncated_case_count": 0
+  }
+}

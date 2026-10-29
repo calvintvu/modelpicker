@@ -1,0 +1,34 @@
+{
+  "source": "https://github.com/X-PLUG/WritingBench",
+  "revision": "ae2d5176449b7b769815482641d35926f26793eb",
+  "file": "benchmark_query/benchmark_all.jsonl",
+  "source_sha256": "18fee37c645166eb2e206b36366b2e354265b1e4201db2c86e759e825eaddcbe",
+  "license": "Apache-2.0",
+  "language": "en",
+  "included_categories": [
+    "Poetry",
+    "Screenplay",
+    "Prose",
+    "Novel Manuscript",
+    "Plot Development",
+    "Fan Fiction",
+    "Novel Outline",
+    "Character Design",
+    "Lyric Writing"
+  ],
+  "selection": "All English rows in the listed upstream categories; query text is unchanged.",
+  "case_count": 42,
+  "category_counts": {
+    "Character Design": 2,
+    "Fan Fiction": 4,
+    "Novel Manuscript": 6,
+    "Novel Outline": 3,
+    "Plot Development": 8,
+    "Poetry": 6,
+    "Prose": 6,
+    "Screenplay": 7
+  },
+  "suite_sha256": "d119618da0b0555aa81a2b004a03a95db5c800fc8e0969833387380241d396a0",
+  "mapping": "All cases expect writing. Labels are derived from upstream categories and need review before inference.",
+  "status": "Prepared; no model predictions have been requested."
+}
